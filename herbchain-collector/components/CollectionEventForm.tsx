@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { uploadFileToIPFS } from '@/utils/uploadToIPFS';
 import ABI from "../utils/ABI.json";
 import Address from "../utils/Address.json";
+import { v4 as uuidv4 } from "uuid";
+
 
 export default function CollectionEventForm() {
   
@@ -12,9 +14,11 @@ export default function CollectionEventForm() {
     species: "",
     location: "",
     initialQuality: "",
+    qty : "",
   });
   const [file, setFile] = useState<File>();
   const [fileUrl, setFileUrl] = useState();
+  const [collectorId,setCollectorId] = useState();
   const [message, setMessage] = useState<string>();
   const uploadFile = async () => {
     if(!file) return;
@@ -32,6 +36,8 @@ export default function CollectionEventForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form Data:", formData);
+    const batchId = uuidv4();
+
     // TODO: Send to backend or blockchain
   };
 
@@ -107,6 +113,18 @@ export default function CollectionEventForm() {
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
             disabled
+          />
+        </div>
+          {/* Qty */}
+          <div>
+          <label className="block text-sm font-medium">Qty</label>
+          <input
+            type="number"
+            name="qty"
+            value={formData.qty}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+            required
           />
         </div>
         <label className='block text-sm font-medium'>Select a image</label>
