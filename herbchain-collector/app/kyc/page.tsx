@@ -5,8 +5,10 @@ import { useState } from "react";
 export default function KycPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     location: "",
+    email:"",
+    password:"",
     govtId: "",
   });
 
@@ -18,10 +20,20 @@ export default function KycPage() {
   // Submit KYC
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/wallet")
 
-    alert("KYC submitted!");
+    const {username, email, password, govtId, location} = formData;
+
+    const resp = await fetch('/api/auth',{
+      method: "POST",
+      body: JSON.stringify(formData),
+    })
+
+    const data  = await resp.json();
+    localStorage.setItem("collectorId", data.collectorId); //todo : use cookies and jwt-token :* this is temporary
+
+    router.push("/wallet");
   };
+
 
   return (
     <div className="p-6 max-w-md mx-auto border rounded-lg shadow-md">
@@ -31,7 +43,7 @@ export default function KycPage() {
         <input
           name="name"
           placeholder="Full Name"
-          value={formData.name}
+          value={formData.username}
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required

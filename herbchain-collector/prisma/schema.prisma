@@ -15,7 +15,8 @@ datasource db {
 }
 
 model Collector {
-  id              String         @id @default(uuid())
+  id              String      @id @default(uuid())
+  username        String      
   email           String      @unique
   password        String
   governmentId    String

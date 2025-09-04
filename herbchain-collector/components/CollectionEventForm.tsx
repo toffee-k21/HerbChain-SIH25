@@ -18,8 +18,8 @@ export default function CollectionEventForm() {
   });
   const [file, setFile] = useState<File>();
   const [fileUrl, setFileUrl] = useState();
-  const [collectorId,setCollectorId] = useState();
   const [message, setMessage] = useState<string>();
+  
   const uploadFile = async () => {
     if(!file) return;
     const response = await uploadFileToIPFS(file);
@@ -37,8 +37,9 @@ export default function CollectionEventForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     const batchId = uuidv4();
+    const collectorId = localStorage.getItem("collectorId");
 
-    // TODO: Send to backend or blockchain
+    // make a blockchain req to store it on blockchain
   };
 
   useEffect(() => {
