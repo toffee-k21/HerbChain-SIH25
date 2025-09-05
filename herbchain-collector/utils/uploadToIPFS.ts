@@ -1,8 +1,9 @@
 import axios from "axios";
 const key = process.env.NEXT_PUBLIC_PINATA_KEY;
-const secret = process.env._NEXT_PINATA_SECRET;
+const secret = "22d73b60af89c014de08f5c4b1e649a4b3fd2174b61ae115f86a21db1b665517";
+console.log(secret)
 export const uploadFileToIPFS = async (file:string | Blob)=>{
-      console.log("key",key,secret);
+      console.log("key :",key, "secret :",secret);
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
     let data = new FormData();

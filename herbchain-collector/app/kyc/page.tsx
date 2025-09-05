@@ -80,14 +80,6 @@ export default function KycPage() {
           required
         />
         <input
-          name="governmentId"
-          placeholder="Government ID"
-          value={formData.governmentId}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
-        <input
           name="email"
           placeholder="email"
           value={formData.email}
@@ -104,7 +96,14 @@ export default function KycPage() {
           className="w-full border p-2 rounded"
           required
         />
-
+         <input
+          name="governmentId"
+          placeholder="Government ID"
+          value={formData.governmentId}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
         <button
           type="submit"
           className="w-full bg-green-500 text-white p-2 rounded"

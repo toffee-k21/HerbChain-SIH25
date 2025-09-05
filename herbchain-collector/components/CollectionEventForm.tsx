@@ -22,11 +22,18 @@ export default function CollectionEventForm() {
 
   const uploadFile = async () => {
     if(!file) return;
-    const response = await uploadFileToIPFS(file);
-    setFileUrl(response);
-    setMessage("Uploaded File");
-    console.log(fileUrl);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    console.log("IPFS Hash:", data.IpfsHash);
   };
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -37,7 +44,6 @@ export default function CollectionEventForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     const batchId = uuidv4();
-    const collectorId = localStorage.getItem("collectorId");
 console.log("yay ! fine as of now");
     // make a blockchain req to store it on blockchain
   };
@@ -45,6 +51,9 @@ console.log("yay ! fine as of now");
   useEffect(() => {
     const now = new Date().toISOString().slice(0, 16);
     setFormData((prev) => ({ ...prev, timestamp: now }));
+    const collectorId = localStorage.getItem("collectorId");
+    if(!collectorId) return;
+    setFormData((prev)=>({...prev, collectorId:collectorId}))
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -58,6 +67,7 @@ console.log("yay ! fine as of now");
         }
       );
     }
+
   }, []);
 
   return (
@@ -84,6 +94,7 @@ console.log("yay ! fine as of now");
           <input
             type="text"
             name="collectorId"
+            readOnly 
             value={formData.collectorId}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
