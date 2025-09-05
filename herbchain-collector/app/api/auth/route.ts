@@ -8,8 +8,13 @@ export async function POST(req: Request) {
     if (!email || !password) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
-
-    const collectorId = await prisma.collector.create({email, password, username, governmentId, location});
+    const collectorId = await prisma.collector.create({  data: {
+        email,
+        password,
+        username,
+        governmentId,
+        location,
+      }});
 
     return NextResponse.json({ collectorId: collectorId }, { status: 201 });
   } catch (err: any) {

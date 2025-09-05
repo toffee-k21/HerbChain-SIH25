@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function KycPage() {
   const router = useRouter();
@@ -9,7 +9,7 @@ export default function KycPage() {
     location: "",
     email:"",
     password:"",
-    govtId: "",
+    governmentId: "",
   });
 
   // Handle form input
@@ -21,18 +21,41 @@ export default function KycPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const {username, email, password, govtId, location} = formData;
-
+    // const {username, email, password, governmentId, location} = formData;
+    // console.log(formData);
     const resp = await fetch('/api/auth',{
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(formData),
     })
+    console.log("resp",resp);
 
     const data  = await resp.json();
-    localStorage.setItem("collectorId", data.collectorId); //todo : use cookies and jwt-token :* this is temporary
+    console.log("data",data);
+    localStorage.setItem("collectorId", data.collectorId.id); //todo : use cookies and jwt-token :* this is temporary
 
     router.push("/wallet");
   };
+
+    useEffect(() => {
+      const now = new Date().toISOString().slice(0, 16);
+      setFormData((prev) => ({ ...prev, timestamp: now }));
+  
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude.toFixed(6);
+            const lng = pos.coords.longitude.toFixed(6);
+            setFormData((prev) => ({ ...prev, location: `${lat},${lng}` }));
+          },
+          (err) => {
+            console.error("Location error:", err);
+          }
+        );
+      }
+    }, []);
 
 
   return (
@@ -41,7 +64,7 @@ export default function KycPage() {
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <input
-          name="name"
+          name="username"
           placeholder="Full Name"
           value={formData.username}
           onChange={handleChange}
@@ -57,9 +80,26 @@ export default function KycPage() {
           required
         />
         <input
-          name="govtId"
+          name="governmentId"
           placeholder="Government ID"
-          value={formData.govtId}
+          value={formData.governmentId}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
+        <input
+          name="email"
+          placeholder="email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+          required
+        />
+        <input
+          name="password"
+          placeholder="password"
+          type="password"
+          value={formData.password}
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required
