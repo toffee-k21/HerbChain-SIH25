@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import EthereumProvider from "@walletconnect/ethereum-provider";
+import { useRouter } from "next/navigation";
 
 let wcProvider: EthereumProvider | null = null;
 
 const projectId = "29a699b060ba734c4986b31205e83da5"; // for test only
 
 export default function WalletPage() {
+  const router = useRouter();
   const [address, setAddress] = useState<string | null>(null);
 
   async function connectWallet() {
@@ -34,6 +36,7 @@ export default function WalletPage() {
       const ethersProvider = new ethers.BrowserProvider(wcProvider as any);
       const signer = await ethersProvider.getSigner();
       setAddress(await signer.getAddress());
+      router.push("/collectorDashboard"); // todo : fix it
     } catch (err) {
       console.error("Wallet connection failed", err);
     }
