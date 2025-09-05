@@ -4,17 +4,19 @@ import { uploadFileToIPFS } from '@/utils/uploadToIPFS';
 import ABI from "../utils/ABI.json";
 import Address from "../utils/Address.json";
 import { v4 as uuidv4 } from "uuid";
+import { getHerbChainContract, recordCollection } from '@/lib/wallet';
 
 
 export default function CollectionEventForm() {
   
   const [formData, setFormData] = useState({
+    herbName: "",
     timestamp: "",
-    collectorId: "",
-    species: "",
+    actorId: "",
     location: "",
-    initialQuality: "",
-    qty : "",
+    quality: "",
+    quantity : 0,
+    details : ""
   });
   const [file, setFile] = useState<File>();
   const [fileUrl, setFileUrl] = useState();
@@ -33,7 +35,7 @@ export default function CollectionEventForm() {
     const data = await res.json();
     console.log("IPFS Hash:", data.IpfsHash);
   };
-  
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -44,16 +46,15 @@ export default function CollectionEventForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     const batchId = uuidv4();
-console.log("yay ! fine as of now");
-    // make a blockchain req to store it on blockchain
+    const {quantity, actorId, location, details, quality, herbName} = formData;
+    recordCollection(batchId, herbName, quantity, actorId, quality, location, details);
   };
-
   useEffect(() => {
     const now = new Date().toISOString().slice(0, 16);
     setFormData((prev) => ({ ...prev, timestamp: now }));
-    const collectorId = localStorage.getItem("collectorId");
-    if(!collectorId) return;
-    setFormData((prev)=>({...prev, collectorId:collectorId}))
+    const actorId = localStorage.getItem("actorId");
+    if(!actorId) return;
+    setFormData((prev)=>({...prev, actorId:actorId}))
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -93,22 +94,22 @@ console.log("yay ! fine as of now");
           <label className="block text-sm font-medium">Collector ID</label>
           <input
             type="text"
-            name="collectorId"
+            name="actorId"
             readOnly 
-            value={formData.collectorId}
+            value={formData.actorId}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
             required
           />
         </div>
 
-        {/* Species */}
+        {/* Herb Name */}
         <div>
-          <label className="block text-sm font-medium">Species</label>
+          <label className="block text-sm font-medium">Herb Name</label>
           <input
             type="text"
-            name="species"
-            value={formData.species}
+            name="herbName"
+            value={formData.herbName}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
             required
@@ -132,8 +133,8 @@ console.log("yay ! fine as of now");
           <label className="block text-sm font-medium">Qty</label>
           <input
             type="number"
-            name="qty"
-            value={formData.qty}
+            name="quantity"
+            value={formData.quantity}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
             required
@@ -164,8 +165,19 @@ console.log("yay ! fine as of now");
         <div>
           <label className="block text-sm font-medium">Initial Quality</label>
           <textarea
-            name="initialQuality"
-            value={formData.initialQuality}
+            name="quality"
+            value={formData.quality}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+
+        {/* Details */}
+        <div>
+          <label className="block text-sm font-medium">Details</label>
+          <textarea
+            name="details"
+            value={formData.details}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg"
           />
