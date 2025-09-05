@@ -2,68 +2,94 @@
 pragma solidity ^0.8.20;
 
 contract HerbChain {
-    struct CollectionEvent {
-        uint timestamp;
-        string collectorId;
-        string species;
-        string location; // GPS as "lat,lng"
-        uint initialQuality; // optional for prototype
-    }
+    enum StepType { Collection, Processing, Testing, Shipment, Retail }
 
-    struct ProcessingStep {
+    struct Step {
+        StepType stepType;     // collection, processing, testing, shipment...
         uint timestamp;
-        string facilityId;
-        string step; // drying, grinding, storage
-        string notes;
+        string actorId;        // collectorId, facilityId, labId, shipperId...
+        string quality;        // free text or JSON (e.g. "purity=95%;moisture=7%")
+        string location;       // GPS or facility code
+        string action;         // e.g. "collected", "dried", "tested", "shipped"
+        string details;        // extra notes / IPFS hash
     }
 
     struct Product {
         string batchId;
-        CollectionEvent collection;
-        ProcessingStep[] processingSteps;
-        uint quantity; // total items in batch
+        string herbName;       // fixed for the batch
+        uint quantity;         // fixed for the batch
+        Step[] steps;          // lifecycle events
     }
 
-    mapping(string => Product) public products;
+    mapping(string => Product) private products;
 
     // --- Events ---
-    event CollectionRecorded(string batchId);
-    event ProcessingRecorded(string batchId, string step);
+    event StepRecorded(string batchId, StepType stepType, string action);
 
     // --- Functions ---
     function recordCollection(
         string memory batchId,
-        string memory collectorId,
-        string memory species,
+        string memory herbName,
+        uint quantity,
+        string memory actorId,
+        string memory quality,
         string memory location,
-        uint initialQuality,
-        uint quantity
+        string memory details
     ) public {
+        require(products[batchId].steps.length == 0, "Batch already exists");
+
+        // create product metadata
         products[batchId].batchId = batchId;
+        products[batchId].herbName = herbName;
         products[batchId].quantity = quantity;
-        products[batchId].collection = CollectionEvent(
-            block.timestamp,
-            collectorId,
-            species,
-            location,
-            initialQuality
+
+        // record collection step
+        products[batchId].steps.push(
+            Step(
+                StepType.Collection,
+                block.timestamp,
+                actorId,
+                quality,
+                location,
+                "collected",
+                details
+            )
         );
-        emit CollectionRecorded(batchId);
+
+        emit StepRecorded(batchId, StepType.Collection, "collected");
     }
 
-    function addProcessingStep(
+    function recordStep(
         string memory batchId,
-        string memory facilityId,
-        string memory step,
-        string memory notes
+        StepType stepType,
+        string memory actorId,
+        string memory quality,
+        string memory location,
+        string memory action,
+        string memory details
     ) public {
-        products[batchId].processingSteps.push(
-            ProcessingStep(block.timestamp, facilityId, step, notes)
+        require(products[batchId].steps.length > 0, "Batch does not exist");
+
+        products[batchId].steps.push(
+            Step(
+                stepType,
+                block.timestamp,
+                actorId,
+                quality,
+                location,
+                action,
+                details
+            )
         );
-        emit ProcessingRecorded(batchId, step);
+
+        emit StepRecorded(batchId, stepType, action);
     }
 
     function getProduct(string memory batchId) public view returns (Product memory) {
         return products[batchId];
+    }
+
+    function getSteps(string memory batchId) public view returns (Step[] memory) {
+        return products[batchId].steps;
     }
 }

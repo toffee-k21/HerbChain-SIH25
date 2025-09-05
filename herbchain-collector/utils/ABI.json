@@ -1,3 +1,249 @@
 {
-    "abi": {}
+    "abi": [
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "batchId",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "herbName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "quantity",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actorId",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "quality",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "location",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "name": "recordCollection",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "batchId",
+                    "type": "string"
+                },
+                {
+                    "internalType": "enum HerbChain.StepType",
+                    "name": "stepType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actorId",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "quality",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "location",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "action",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "name": "recordStep",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "batchId",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "enum HerbChain.StepType",
+                    "name": "stepType",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "action",
+                    "type": "string"
+                }
+            ],
+            "name": "StepRecorded",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "batchId",
+                    "type": "string"
+                }
+            ],
+            "name": "getProduct",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "string",
+                            "name": "batchId",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "herbName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "quantity",
+                            "type": "uint256"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "enum HerbChain.StepType",
+                                    "name": "stepType",
+                                    "type": "uint8"
+                                },
+                                {
+                                    "internalType": "uint256",
+                                    "name": "timestamp",
+                                    "type": "uint256"
+                                },
+                                {
+                                    "internalType": "string",
+                                    "name": "actorId",
+                                    "type": "string"
+                                },
+                                {
+                                    "internalType": "string",
+                                    "name": "quality",
+                                    "type": "string"
+                                },
+                                {
+                                    "internalType": "string",
+                                    "name": "location",
+                                    "type": "string"
+                                },
+                                {
+                                    "internalType": "string",
+                                    "name": "action",
+                                    "type": "string"
+                                },
+                                {
+                                    "internalType": "string",
+                                    "name": "details",
+                                    "type": "string"
+                                }
+                            ],
+                            "internalType": "struct HerbChain.Step[]",
+                            "name": "steps",
+                            "type": "tuple[]"
+                        }
+                    ],
+                    "internalType": "struct HerbChain.Product",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "batchId",
+                    "type": "string"
+                }
+            ],
+            "name": "getSteps",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "enum HerbChain.StepType",
+                            "name": "stepType",
+                            "type": "uint8"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "timestamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "actorId",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "quality",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "location",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "action",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "details",
+                            "type": "string"
+                        }
+                    ],
+                    "internalType": "struct HerbChain.Step[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
 }
