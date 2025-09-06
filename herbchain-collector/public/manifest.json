@@ -1,0 +1,22 @@
+{
+  "name": "HerbChain Collector",
+  "short_name": "HerbChain",
+  "theme_color": "#317EFB",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "herbs.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "herbs.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
