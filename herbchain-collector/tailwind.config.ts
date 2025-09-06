@@ -16,6 +16,19 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        orange: {
+          DEFAULT: "#FF7D24",
+          50: "#FFF4E6",
+          100: "#FFE4B8",
+          200: "#FFD28A",
+          300: "#FFC05C",
+          400: "#FFAE2E",
+          500: "#FF7D24",
+          600: "#E6651A",
+          700: "#CC4D10",
+          800: "#B33506",
+          900: "#991D00",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -50,6 +63,10 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+      },
+      fontFamily: {
+        poppins: ['var(--font-poppins)', 'sans-serif'],
+        sans: ['var(--font-poppins)', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

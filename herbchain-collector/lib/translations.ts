@@ -61,6 +61,37 @@ export const translations = {
     'kyc.status.approved': 'Approved',
     'kyc.status.rejected': 'Rejected',
     
+    // KYC Form
+    'kyc.form.title': 'KYC Registration',
+    'kyc.form.fullname': 'Full Name',
+    'kyc.form.location': 'Location',
+    'kyc.form.email': 'Email',
+    'kyc.form.password': 'Password',
+    'kyc.form.governmentId': 'Government ID',
+    'kyc.form.submit': 'Submit KYC',
+    'kyc.form.dragHint': 'Complete your KYC to proceed further',
+    'kyc.form.progress.continue': 'Keep dragging...',
+    'kyc.form.progress.almost': 'Almost there...',
+    'kyc.form.progress.more': 'Just a bit more...',
+    'kyc.form.progress.perfect': 'Perfect!',
+    
+    // KYC Carousel
+    'kyc.carousel.collectors.title': 'Wild Collectors',
+    'kyc.carousel.collectors.primary': 'Authentic Collection',
+    'kyc.carousel.collectors.secondary': 'Collect herbs directly from their natural habitat with verified authenticity',
+    
+    'kyc.carousel.technicians.title': 'Lab Technicians',
+    'kyc.carousel.technicians.primary': 'Quality Testing',
+    'kyc.carousel.technicians.secondary': 'Ensure product quality through scientific testing and verification',
+    
+    'kyc.carousel.stakeholders.title': 'Stakeholders',
+    'kyc.carousel.stakeholders.primary': 'Supply Chain Management',
+    'kyc.carousel.stakeholders.secondary': 'Manage and oversee the entire herb supply chain process',
+    
+    'kyc.carousel.consumers.title': 'Consumers',
+    'kyc.carousel.consumers.primary': 'Verified Products',
+    'kyc.carousel.consumers.secondary': 'Access authentic, tested herbs with complete traceability',
+    
     // Wallet
     'wallet.title': 'Wallet',
     'wallet.balance': 'Balance',
@@ -180,6 +211,37 @@ export const translations = {
     'kyc.status.pending': 'लंबित',
     'kyc.status.approved': 'स्वीकृत',
     'kyc.status.rejected': 'अस्वीकृत',
+    
+    // KYC Form
+    'kyc.form.title': 'केवाईसी पंजीकरण',
+    'kyc.form.fullname': 'पूरा नाम',
+    'kyc.form.location': 'स्थान',
+    'kyc.form.email': 'ईमेल',
+    'kyc.form.password': 'पासवर्ड',
+    'kyc.form.governmentId': 'सरकारी पहचान',
+    'kyc.form.submit': 'केवाईसी जमा करें',
+    'kyc.form.dragHint': 'आगे बढ़ने के लिए अपना KYC पूरा करें',
+    'kyc.form.progress.continue': 'खींचते रहें...',
+    'kyc.form.progress.almost': 'लगभग हो गया...',
+    'kyc.form.progress.more': 'बस थोड़ा और...',
+    'kyc.form.progress.perfect': 'बहुत बढ़िया!',
+    
+    // KYC Carousel
+    'kyc.carousel.collectors.title': 'जंगली संग्रहकर्ता',
+    'kyc.carousel.collectors.primary': 'प्रामाणिक संग्रह',
+    'kyc.carousel.collectors.secondary': 'सत्यापित प्रामाणिकता के साथ जड़ी-बूटियों को उनके प्राकृतिक आवास से सीधे एकत्रित करें',
+    
+    'kyc.carousel.technicians.title': 'प्रयोगशाला तकनीशियन',
+    'kyc.carousel.technicians.primary': 'गुणवत्ता परीक्षण',
+    'kyc.carousel.technicians.secondary': 'वैज्ञानिक परीक्षण और सत्यापन के माध्यम से उत्पाद की गुणवत्ता सुनिश्चित करें',
+    
+    'kyc.carousel.stakeholders.title': 'हितधारक',
+    'kyc.carousel.stakeholders.primary': 'आपूर्ति श्रृंखला प्रबंधन',
+    'kyc.carousel.stakeholders.secondary': 'संपूर्ण जड़ी-बूटी आपूर्ति श्रृंखला प्रक्रिया का प्रबंधन और निरीक्षण करें',
+    
+    'kyc.carousel.consumers.title': 'उपभोक्ता',
+    'kyc.carousel.consumers.primary': 'सत्यापित उत्पाद',
+    'kyc.carousel.consumers.secondary': 'पूर्ण ट्रेसेबिलिटी के साथ प्रामाणिक, परीक्षित जड़ी-बूटियों तक पहुंच',
     
     // Wallet
     'wallet.title': 'वॉलेट',
