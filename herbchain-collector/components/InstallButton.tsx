@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 export default function InstallButton() {
+    console.log("hellooooooooo")
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function InstallButton() {
   }, []);
 
   const handleInstallClick = async () => {
+    console.log("hello");
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -24,11 +26,11 @@ export default function InstallButton() {
 
   return (
     <button
-      onClick={handleInstallClick}
+      onClick={() => handleInstallClick()}
       disabled={!deferredPrompt}
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+      className="px-4 bg-neutral-800 text-white rounded-lg"
     >
-      Install App
+      Install PWA
     </button>
   );
 }

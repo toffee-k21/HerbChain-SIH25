@@ -1,11 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import { uploadFileToIPFS } from '@/utils/uploadToIPFS';
-import ABI from "../utils/ABI.json";
-import Address from "../utils/Address.json";
 import { v4 as uuidv4 } from "uuid";
-import { getHerbChainContract, recordCollection } from '@/lib/wallet';
-import GeminiAnalyzer from './GeminiAnalyzer';
+import { recordCollection } from '@/lib/wallet';
+import GeminiAnalyzer from "./GeminiAnalyzer";
 
 
 export default function CollectionEventForm() {
@@ -17,10 +14,10 @@ export default function CollectionEventForm() {
     location: "",
     quality: "",
     quantity : 0,
-    details : ""
   });
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState();
   const [fileUrl, setFileUrl] = useState();
+  const [details, setDetails] = useState<string>("");
   const [message, setMessage] = useState<string>();
 
   const uploadFile = async () => {
@@ -47,7 +44,7 @@ export default function CollectionEventForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     const batchId = uuidv4();
-    const {quantity, actorId, location, details, quality, herbName} = formData;
+    const {quantity, actorId, location, quality, herbName} = formData;
     recordCollection(batchId, herbName, quantity, actorId, quality, location, details);
   };
   useEffect(() => {
@@ -73,7 +70,7 @@ export default function CollectionEventForm() {
   }, []);
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6  shadow-lg rounded-2xl">
+    <div className="max-w-lg mx-auzzto mt-10 p-6  shadow-lg rounded-2xl">
       <h2 className="text-2xl font-bold mb-4">Collection Event</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         
@@ -141,25 +138,14 @@ export default function CollectionEventForm() {
             required
           />
         </div>
-        <label className='block text-sm font-medium'>Select a image</label>
-        <input
-          type="file"
-          accept="*.jpg, *.jpeg, *.png"
-          className='p-2 bg-neutral-900 w-full rounded-md'
-          onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
-              setFile(e.target.files[0]);
-            } else {
-              console.log("No files selected.");
-            }
-          }}
-        />
+
+        <GeminiAnalyzer file={file} setFile={setFile} details={details} setDetails={setDetails}/>
         <button
           type="button"
           className="m-2 p-2 border-[0.5] rounded-md  bg-blue-600 block"
           onClick={uploadFile}
         >
-          upload
+          Upload Herb Image
         </button>
 
         {/* Initial Quality */}
@@ -178,8 +164,8 @@ export default function CollectionEventForm() {
           <label className="block text-sm font-medium">Details</label>
           <textarea
             name="details"
-            value={formData.details}
-            onChange={handleChange}
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
             className="w-full p-2 border rounded-lg"
           />
         </div>
@@ -191,7 +177,6 @@ export default function CollectionEventForm() {
           Add to hyper ledger !
         </button>
       </form>
-      <GeminiAnalyzer />
     </div>
   );
 }

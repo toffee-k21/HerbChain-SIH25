@@ -11,21 +11,21 @@ function ConciseResultsView({ analysis }) {
       
       {/* Plant Identification */}
       <div style={{
-        backgroundColor: '#eff6ff',
+        // backgroundColor: '#172554',
         padding: '15px',
         borderRadius: '8px',
-        border: '1px solid #dbeafe'
+        // border: '1px solid #1e40af'
       }}>
-        <h4 style={{ color: '#1e40af', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+        <h4 style={{ color: '#bfdbfe', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
           🌱 Plant Identification
         </h4>
-        <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#000000' }}>
-          <p style={{ margin: '4px 0', color: '#000000' }}><strong>Name:</strong> {analysis.plant.name}</p>
-          <p style={{ margin: '4px 0', color: '#000000' }}><strong>Scientific:</strong> {analysis.plant.scientific}</p>
-          <p style={{ margin: '4px 0', color: '#000000' }}><strong>Confidence:</strong> 
+        <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#d1d5db' }}>
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Name:</strong> {analysis.plant.name}</p>
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Scientific:</strong> {analysis.plant.scientific}</p>
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Confidence:</strong> 
             <span style={{ 
-              backgroundColor: analysis.plant.confidence === 'High' ? '#dcfce7' : analysis.plant.confidence === 'Medium' ? '#fef3c7' : '#fee2e2',
-              color: analysis.plant.confidence === 'High' ? '#166534' : analysis.plant.confidence === 'Medium' ? '#92400e' : '#dc2626',
+              backgroundColor: analysis.plant.confidence === 'High' ? '#14532d' : analysis.plant.confidence === 'Medium' ? '#713f12' : '#7f1d1d',
+              color: '#d1d5db',
               padding: '2px 6px', 
               borderRadius: '4px', 
               fontSize: '12px',
@@ -42,20 +42,20 @@ function ConciseResultsView({ analysis }) {
         
         {/* Health Status */}
         <div style={{
-          backgroundColor: '#f0fdf4',
+          backgroundColor: '#052e16',
           padding: '15px',
           borderRadius: '8px',
-          border: '1px solid #bbf7d0'
+          border: '1px solid #15803d'
         }}>
-          <h4 style={{ color: '#166534', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+          <h4 style={{ color: '#4ade80', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             💚 Health Status
           </h4>
-          <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#000000' }}>
-            <p style={{ margin: '4px 0', color: '#000000' }}><strong>Status:</strong> {analysis.health.status}</p>
-            <p style={{ margin: '4px 0', color: '#000000' }}><strong>Score:</strong>
+          <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#d1d5db' }}>
+            <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Status:</strong> {analysis.health.status}</p>
+            <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Score:</strong>
               <span style={{ 
-                backgroundColor: parseInt(analysis.health.score) >= 7 ? '#dcfce7' : parseInt(analysis.health.score) >= 4 ? '#fef3c7' : '#fee2e2',
-                color: parseInt(analysis.health.score) >= 7 ? '#166534' : parseInt(analysis.health.score) >= 4 ? '#92400e' : '#dc2626',
+                backgroundColor: parseInt(analysis.health.score) >= 7 ? '#14532d' : parseInt(analysis.health.score) >= 4 ? '#713f12' : '#7f1d1d',
+                color: '#d1d5db',
                 padding: '2px 6px', 
                 borderRadius: '4px', 
                 fontSize: '12px',
@@ -65,25 +65,25 @@ function ConciseResultsView({ analysis }) {
                 {analysis.health.score}
               </span>
             </p>
-            <p style={{ margin: '4px 0', color: '#000000' }}><strong>Issues:</strong> {analysis.health.issues}</p>
+            <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Issues:</strong> {analysis.health.issues}</p>
           </div>
         </div>
 
         {/* Quality Assessment */}
         <div style={{
-          backgroundColor: '#fef3c7',
+          backgroundColor: '#422006',
           padding: '15px',
           borderRadius: '8px',
-          border: '1px solid #fed7aa'
+          border: '1px solid #b45309'
         }}>
-          <h4 style={{ color: '#92400e', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+          <h4 style={{ color: '#f59e0b', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             ⭐ Quality Rating
           </h4>
-          <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#000000' }}>
-            <p style={{ margin: '4px 0', color: '#000000' }}><strong>Rating:</strong>
+          <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#d1d5db' }}>
+            <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Rating:</strong>
               <span style={{ 
-                backgroundColor: parseInt(analysis.quality.rating) >= 7 ? '#dcfce7' : parseInt(analysis.quality.rating) >= 4 ? '#fef3c7' : '#fee2e2',
-                color: parseInt(analysis.quality.rating) >= 7 ? '#166534' : parseInt(analysis.quality.rating) >= 4 ? '#92400e' : '#dc2626',
+                backgroundColor: parseInt(analysis.quality.rating) >= 7 ? '#14532d' : parseInt(analysis.quality.rating) >= 4 ? '#713f12' : '#7f1d1d',
+                color: '#d1d5db',
                 padding: '2px 6px', 
                 borderRadius: '4px', 
                 fontSize: '12px',
@@ -93,34 +93,34 @@ function ConciseResultsView({ analysis }) {
                 {analysis.quality.rating}
               </span>
             </p>
-            <p style={{ margin: '4px 0', color: '#000000' }}><strong>Market Ready:</strong> {analysis.quality.market_ready}</p>
-            <p style={{ margin: '4px 0', fontSize: '12px', color: '#000000' }}>{analysis.quality.summary}</p>
+            <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Market Ready:</strong> {analysis.quality.market_ready}</p>
+            <p style={{ margin: '4px 0', fontSize: '12px', color: '#d1d5db' }}>{analysis.quality.summary}</p>
           </div>
         </div>
       </div>
 
       {/* Disease & Pest Information */}
       <div style={{
-        backgroundColor: '#fdf2f8',
+        backgroundColor: '#4c1d95',
         padding: '15px',
         borderRadius: '8px',
-        border: '1px solid #fce7f3'
+        border: '1px solid #7c3aed'
       }}>
-        <h4 style={{ color: '#be185d', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+        <h4 style={{ color: '#d8b4fe', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
           🦠 Disease & Pest Analysis
         </h4>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', fontSize: '14px', color: '#000000' }}>
-          <div style={{ color: '#000000' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', fontSize: '14px', color: '#d1d5db' }}>
+          <div style={{ color: '#d1d5db' }}>
             <strong>Diseases:</strong> {Array.isArray(analysis.diseases.found) ? analysis.diseases.found.join(', ') : analysis.diseases.found}
           </div>
-          <div style={{ color: '#000000' }}>
+          <div style={{ color: '#d1d5db' }}>
             <strong>Pests:</strong> {Array.isArray(analysis.diseases.pests) ? analysis.diseases.pests.join(', ') : analysis.diseases.pests}
           </div>
-          <div style={{ color: '#000000' }}>
+          <div style={{ color: '#d1d5db' }}>
             <strong>Severity:</strong>
             <span style={{ 
-              backgroundColor: analysis.diseases.severity === 'None' ? '#dcfce7' : analysis.diseases.severity === 'Mild' ? '#fef3c7' : '#fee2e2',
-              color: analysis.diseases.severity === 'None' ? '#166534' : analysis.diseases.severity === 'Mild' ? '#92400e' : '#dc2626',
+              backgroundColor: analysis.diseases.severity === 'None' ? '#14532d' : analysis.diseases.severity === 'Mild' ? '#713f12' : '#7f1d1d',
+              color: '#d1d5db',
               padding: '2px 6px', 
               borderRadius: '4px', 
               fontSize: '12px',
@@ -134,60 +134,60 @@ function ConciseResultsView({ analysis }) {
 
       {/* Recommendations */}
       <div style={{
-        backgroundColor: '#f0f9ff',
+        backgroundColor: '#083344',
         padding: '15px',
         borderRadius: '8px',
-        border: '1px solid #bae6fd'
+        border: '1px solid #0ea5e9'
       }}>
-        <h4 style={{ color: '#0369a1', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+        <h4 style={{ color: '#7dd3fc', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
           📝 Recommendations
         </h4>
-        <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#000000' }}>
-          <div style={{ marginBottom: '8px', color: '#000000' }}>
+        <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#d1d5db' }}>
+          <div style={{ marginBottom: '8px', color: '#d1d5db' }}>
             <strong>Immediate Actions:</strong>
-            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#000000' }}>
+            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#d1d5db' }}>
               {Array.isArray(analysis.recommendations.immediate) ? 
                 analysis.recommendations.immediate.map((action, index) => (
-                  <li key={index} style={{ margin: '2px 0', color: '#000000' }}>{action}</li>
+                  <li key={index} style={{ margin: '2px 0', color: '#d1d5db' }}>{action}</li>
                 )) : 
-                <li style={{ color: '#000000' }}>{analysis.recommendations.immediate}</li>
+                <li style={{ color: '#d1d5db' }}>{analysis.recommendations.immediate}</li>
               }
             </ul>
           </div>
-          <div style={{ marginBottom: '8px', color: '#000000' }}>
+          <div style={{ marginBottom: '8px', color: '#d1d5db' }}>
             <strong>Care Tips:</strong>
-            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#000000' }}>
+            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#d1d5db' }}>
               {Array.isArray(analysis.recommendations.care) ? 
                 analysis.recommendations.care.map((tip, index) => (
-                  <li key={index} style={{ margin: '2px 0', color: '#000000' }}>{tip}</li>
+                  <li key={index} style={{ margin: '2px 0', color: '#d1d5db' }}>{tip}</li>
                 )) : 
-                <li style={{ color: '#000000' }}>{analysis.recommendations.care}</li>
+                <li style={{ color: '#d1d5db' }}>{analysis.recommendations.care}</li>
               }
             </ul>
           </div>
-          <p style={{ margin: '4px 0', color: '#000000' }}><strong>Harvest Timing:</strong> {analysis.recommendations.harvest}</p>
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Harvest Timing:</strong> {analysis.recommendations.harvest}</p>
         </div>
       </div>
 
       {/* Ayurvedic Notes */}
       {analysis.ayurvedic_notes && analysis.ayurvedic_notes !== 'No additional notes available' && (
         <div style={{
-          backgroundColor: '#fefce8',
+          backgroundColor: '#422006',
           padding: '15px',
           borderRadius: '8px',
-          border: '1px solid #fde68a'
+          border: '1px solid #d97706'
         }}>
-          <h4 style={{ color: '#a16207', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+          <h4 style={{ color: '#f59e0b', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             🌿 Ayurvedic Notes
           </h4>
-          <p style={{ fontSize: '14px', margin: '0', lineHeight: '1.4', color: '#000000' }}>{analysis.ayurvedic_notes}</p>
+          <p style={{ fontSize: '14px', margin: '0', lineHeight: '1.4', color: '#d1d5db' }}>{analysis.ayurvedic_notes}</p>
         </div>
       )}
     </div>
   );
 }
 
-export default function GeminiAnalyzer() {
+export default function GeminiAnalyzer({file, setFile, details, setDetails}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -278,6 +278,7 @@ export default function GeminiAnalyzer() {
       }
 
       setAnalysisResult(result.analysis);
+      setDetails(JSON.stringify(result.analysis));
     } catch (err) {
       console.error('Analysis error:', err);
       setError(`Analysis failed: ${err.message}`);
@@ -289,21 +290,21 @@ export default function GeminiAnalyzer() {
   return (
     <div style={{
       maxWidth: '800px',
-      margin: '20px auto',
-      padding: '20px',
-      border: '1px solid #ddd',
+      // margin: '20px auto',
+      // padding: '20px',
+      // border: '1px solid #374151',
       borderRadius: '12px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      backgroundColor: '#ffffff'
+      // boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+      // backgroundColor: '#111827'
     }}>
       <h2 style={{
         fontSize: '24px',
         fontWeight: 'bold',
         marginBottom: '20px',
-        color: '#333',
+        color: '#d1d5db',
         textAlign: 'center'
       }}>
-        🌿 Gemini Plant Analyzer
+        {/* 🌿 Predict the crop health */}
       </h2>
 
       {/* File Input */}
@@ -313,9 +314,9 @@ export default function GeminiAnalyzer() {
           fontSize: '14px',
           fontWeight: '500',
           marginBottom: '8px',
-          color: '#000000'
+          color: '#d1d5db'
         }}>
-          Select Plant Image for Analysis
+          Select Plant Image of Plant
         </label>
         <input
           type="file"
@@ -324,9 +325,9 @@ export default function GeminiAnalyzer() {
           style={{
             width: '100%',
             padding: '10px',
-            border: '2px dashed #ccc',
+            border: '2px dashed #4b5563',
             borderRadius: '8px',
-            backgroundColor: '#f9f9f9',
+            backgroundColor: '#1f2937',
             cursor: 'pointer'
           }}
         />
@@ -340,7 +341,7 @@ export default function GeminiAnalyzer() {
             width: '300px',
             height: '300px',
             margin: '0 auto',
-            border: '1px solid #ddd',
+            border: '1px solid #374151',
             borderRadius: '8px',
             overflow: 'hidden'
           }}>
@@ -363,8 +364,8 @@ export default function GeminiAnalyzer() {
         style={{
           width: '100%',
           padding: '12px 24px',
-          backgroundColor: isAnalyzing ? '#6b7280' : '#10b981',
-          color: 'white',
+          backgroundColor: isAnalyzing ? '#374151' : '#15803d',
+          color: '#d1d5db',
           border: 'none',
           borderRadius: '8px',
           fontSize: '16px',
@@ -374,7 +375,7 @@ export default function GeminiAnalyzer() {
           transition: 'background-color 0.2s'
         }}
       >
-        {isAnalyzing ? '🔄 Analyzing Plant...' : '🔍 Analyze Plant'}
+        {isAnalyzing ? '🔄 Analyzing Plant...' : 'Run The Herb Health Check'}
       </button>
 
       {/* Loading State */}
@@ -382,14 +383,14 @@ export default function GeminiAnalyzer() {
         <div style={{
           textAlign: 'center',
           padding: '20px',
-          backgroundColor: '#f0f9ff',
+          backgroundColor: '#083344',
           borderRadius: '8px',
           marginBottom: '20px'
         }}>
-          <div style={{ fontSize: '18px', color: '#0369a1' }}>
-            🤖 Gemini AI is analyzing your plant...
+          <div style={{ fontSize: '18px', color: '#7dd3fc' }}>
+            Analyzing the Data Set plase wait...
           </div>
-          <div style={{ fontSize: '14px', color: '#000000', marginTop: '8px' }}>
+          <div style={{ fontSize: '14px', color: '#d1d5db', marginTop: '8px' }}>
             This may take a few moments
           </div>
         </div>
@@ -399,10 +400,10 @@ export default function GeminiAnalyzer() {
       {error && (
         <div style={{
           padding: '15px',
-          backgroundColor: '#fef2f2',
-          border: '1px solid #fecaca',
+          backgroundColor: '#450a0a',
+          border: '1px solid #b91c1c',
           borderRadius: '8px',
-          color: '#dc2626',
+          color: '#f87171',
           marginBottom: '20px'
         }}>
           <strong>Error:</strong> {error}
@@ -412,8 +413,8 @@ export default function GeminiAnalyzer() {
       {/* Results Display */}
       {analysisResult && (
         <div style={{
-          backgroundColor: '#f0fdf4',
-          border: '1px solid #bbf7d0',
+          backgroundColor: '#052e16',
+          border: '1px solid #15803d',
           borderRadius: '12px',
           padding: '20px',
           marginTop: '20px'
@@ -427,7 +428,7 @@ export default function GeminiAnalyzer() {
             <h3 style={{
               fontSize: '20px',
               fontWeight: 'bold',
-              color: '#166534',
+              color: '#4ade80',
               margin: '0',
               display: 'flex',
               alignItems: 'center',
@@ -447,8 +448,8 @@ export default function GeminiAnalyzer() {
                   fontSize: '12px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  backgroundColor: showConciseView ? '#16a34a' : '#e5e7eb',
-                  color: showConciseView ? 'white' : '#374151'
+                  backgroundColor: showConciseView ? '#15803d' : '#374151',
+                  color: '#d1d5db'
                 }}
               >
                 📋 Summary
@@ -462,8 +463,8 @@ export default function GeminiAnalyzer() {
                   fontSize: '12px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  backgroundColor: !showConciseView ? '#16a34a' : '#e5e7eb',
-                  color: !showConciseView ? 'white' : '#374151'
+                  backgroundColor: !showConciseView ? '#15803d' : '#374151',
+                  color: '#d1d5db'
                 }}
               >
                 🔍 Detailed JSON
@@ -477,10 +478,10 @@ export default function GeminiAnalyzer() {
           ) : (
             /* Detailed JSON View */
             <div style={{
-              backgroundColor: '#white',
-              borderRadius: '8px',
+              // backgroundColor: '#111827',
+              // borderRadius: '8px',
               padding: '15px',
-              border: '1px solid #e5e7eb',
+              // border: '1px solid #374151',
               fontFamily: 'monospace'
             }}>
               <pre style={{
@@ -489,7 +490,7 @@ export default function GeminiAnalyzer() {
                 margin: '0',
                 fontSize: '12px',
                 lineHeight: '1.5',
-                color: '#000000'
+                color: '#d1d5db'
               }}>
                 {JSON.stringify(analysisResult, null, 2)}
               </pre>
@@ -503,12 +504,12 @@ export default function GeminiAnalyzer() {
                 
                 {/* Plant ID Card */}
                 <div style={{
-                  backgroundColor: '#eff6ff',
+                  // backgroundColor: '#172554',
                   padding: '15px',
                   borderRadius: '8px',
-                  border: '1px solid #dbeafe'
+                  // border: '1px solid #1e40af'
                 }}>
-                  <h4 style={{ color: '#1e40af', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
+                  <h4 style={{ color: '#bfdbfe', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
                     🌱 Plant Identification
                   </h4>
                   <p><strong>Common:</strong> {analysisResult.plant_identification.common_name}</p>
@@ -519,12 +520,12 @@ export default function GeminiAnalyzer() {
                 {/* Health Status Card */}
                 {analysisResult.health_status && (
                   <div style={{
-                    backgroundColor: '#f0fdf4',
+                    backgroundColor: '#052e16',
                     padding: '15px',
                     borderRadius: '8px',
-                    border: '1px solid #bbf7d0'
+                    border: '1px solid #15803d'
                   }}>
-                    <h4 style={{ color: '#166534', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
+                    <h4 style={{ color: '#4ade80', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
                       💚 Health Status
                     </h4>
                     <p><strong>Overall:</strong> {analysisResult.health_status.overall_health}</p>
@@ -535,19 +536,18 @@ export default function GeminiAnalyzer() {
                 {/* Quality Card */}
                 {analysisResult.quality_assessment && (
                   <div style={{
-                    backgroundColor: '#fef3c7',
+                    backgroundColor: '#422006',
                     padding: '15px',
                     borderRadius: '8px',
-                    border: '1px solid #fed7aa'
+                    border: '1px solid #b45309'
                   }}>
-                    <h4 style={{ color: '#92400e', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
+                    <h4 style={{ color: '#f59e0b', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
                       ⭐ Quality Rating
                     </h4>
                     <p><strong>Rating:</strong> {analysisResult.quality_assessment.quality_rating}/10</p>
                     <p><strong>Market Ready:</strong> {analysisResult.quality_assessment.marketability}</p>
                   </div>
                 )}
-
               </div>
             </div>
           )}
