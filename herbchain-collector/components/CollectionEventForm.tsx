@@ -5,6 +5,7 @@ import ABI from "../utils/ABI.json";
 import Address from "../utils/Address.json";
 import { v4 as uuidv4 } from "uuid";
 import { getHerbChainContract, recordCollection } from '@/lib/wallet';
+import GeminiAnalyzer from './GeminiAnalyzer';
 
 
 export default function CollectionEventForm() {
@@ -190,6 +191,7 @@ export default function CollectionEventForm() {
           Add to hyper ledger !
         </button>
       </form>
+      <GeminiAnalyzer />
     </div>
   );
 }
