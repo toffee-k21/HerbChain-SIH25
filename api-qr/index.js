@@ -25,6 +25,11 @@ app.get("/record-step/:batchId", (req, res) => {
     res.render("recordStep", { batchId });
   });
 
+  app.get("/dashboard/:batchId", (req, res) => {
+    const { batchId } = req.params;
+    res.render("dashboard", { batchId });
+  });
+
 // Route: /product/:batchId
 app.get("/product/:batchId", async (req, res) => {
   try {

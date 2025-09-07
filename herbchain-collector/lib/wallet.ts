@@ -56,3 +56,34 @@ export async function recordCollection(
     );
     return tx.wait();
   }
+
+  // StepType enum mapping (must match Solidity order!)
+export enum StepType {
+  Collection = 0,
+  Processing = 1,
+  Testing = 2,
+  Shipment = 3,
+  Retail = 4,
+}
+
+export async function recordStep(
+  batchId: string,
+  stepType: StepType,
+  actorId: string,
+  quality: string,
+  location: string,
+  action: string,
+  details: string
+) {
+  const contract = await getHerbChainContract();
+  const tx = await contract.recordStep(
+    batchId,
+    stepType,
+    actorId,
+    quality,
+    location,
+    action,
+    details
+  );
+  return tx.wait();
+}
