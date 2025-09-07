@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ImageSelectionModal } from "./ImageSelectionModal";
 import { useTranslation } from "@/hooks/useTranslation";
+import GeminiAnalyzer from "./GeminiAnalyzer";
 
 export default function CollectionEventForm() {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ export default function CollectionEventForm() {
   const [message, setMessage] = useState<string>();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [details, setDetails] = useState<string>("");
 
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);

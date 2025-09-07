@@ -13,6 +13,8 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "HerbChain Collector",
   description: "Secure and transparent herb supply chain management platform",
+  manifest: "/manifest.json",
+  themeColor: "#317EFB",
 };
 
 export default function RootLayout({
@@ -22,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body
         className={`${poppins.variable} font-sans antialiased`}
       >
