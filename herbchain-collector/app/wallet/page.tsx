@@ -96,7 +96,7 @@ export default function WalletPage() {
   }
 
   const navigateToDashboard = () => {
-    router.push("/collectorDashboard");
+    router.push("/home");
   };
 
   const resetConnection = () => {
@@ -104,6 +104,29 @@ export default function WalletPage() {
     setConnectionStatus('idle');
     setErrorMessage('');
     setIsConnecting(false);
+  };
+
+  const disconnectWallet = async () => {
+    try {
+      // For WalletConnect
+      if (wcProvider) {
+        await wcProvider.disconnect();
+        wcProvider = null;
+      }
+      
+      // Reset all state
+      setAddress(null);
+      setConnectionStatus('idle');
+      setErrorMessage('');
+      setIsConnecting(false);
+      
+      // For browser wallets, we can't actually disconnect programmatically
+      // but we clear our local state
+    } catch (error) {
+      console.error("Disconnect failed:", error);
+      // Still reset the state even if disconnect fails
+      resetConnection();
+    }
   };
 
   const formatAddress = (addr: string) => {
@@ -153,7 +176,7 @@ export default function WalletPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden"
+          className="max-w-md mx-auto bg-white rounded-md shadow-2xl overflow-hidden"
           style={{
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1), 0 8px 25px rgba(0, 0, 0, 0.05)'
           }}
@@ -190,7 +213,7 @@ export default function WalletPage() {
                   <Button
                     onClick={connectWallet}
                     disabled={isConnecting || (Date.now() - lastAttempt < 2000)}
-                    className="w-full py-4 bg-primary hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
                     {isConnecting ? t('wallet.connection.trying') : t('wallet.connect')}
                   </Button>
@@ -244,7 +267,7 @@ export default function WalletPage() {
                       </span>
                     </div>
                     
-                    <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                    <div className="p-4 bg-green-50 rounded-md border border-green-200">
                       <p className="text-sm text-gray-600 mb-2">
                         {t('wallet.address')}:
                       </p>
@@ -254,13 +277,23 @@ export default function WalletPage() {
                     </div>
                   </div>
                   
-                  <Button
-                    onClick={navigateToDashboard}
-                    className="w-full py-4 bg-primary hover:bg-primary-600 text-white font-semibold text-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
-                  >
-                    {t('wallet.continue')}
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
+                  <div className="space-y-3">
+                    <Button
+                      onClick={navigateToDashboard}
+                      className="w-full"
+                    >
+                      {t('wallet.continue')}
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                    
+                    <Button
+                      onClick={disconnectWallet}
+                      variant="outline"
+                      className="w-full py-2 text-sm border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400"
+                    >
+                      {t('wallet.disconnect')}
+                    </Button>
+                  </div>
                 </motion.div>
               )}
 
@@ -293,7 +326,7 @@ export default function WalletPage() {
                     <Button
                       onClick={connectWallet}
                       disabled={isConnecting || (Date.now() - lastAttempt < 2000)}
-                      className="w-full py-4 bg-primary hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                      className="w-full py-4 bg-primary hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold text-lg rounded-md shadow-lg hover:shadow-xl transition-all duration-200"
                     >
                       Try Again
                     </Button>

@@ -16,6 +16,8 @@ import {
   FileText,
   Image as ImageIcon,
   CheckCircle,
+  ArrowBigLeftDash,
+  CircleArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,9 +30,11 @@ import {
 } from "@/components/ui/dialog";
 import { ImageSelectionModal } from "./ImageSelectionModal";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useRouter } from "next/navigation";
 
 export default function CollectionEventForm() {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     herbName: "",
@@ -103,6 +107,10 @@ export default function CollectionEventForm() {
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  const backToDashboard = () => {
+    router.push("/home");
   };
 
   const uploadFile = async () => {
@@ -196,6 +204,21 @@ export default function CollectionEventForm() {
       }}
     >
       <div className="container mx-auto px-4 py-8">
+        {/* Back to Dashboard Button */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-2"
+        >
+            <Button
+            onClick={backToDashboard}
+            variant="ghost"
+            className="text-2xl text-primary"
+            >
+            <CircleArrowLeft style={{ width: 25, height: 25 }} />
+            </Button>
+        </motion.div>
+
         {/* Header */}
         {/* <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -559,12 +582,12 @@ export default function CollectionEventForm() {
                   <div className="space-y-2 text-sm">
                     <p><span className="font-medium">Diseases Found:</span> {
                       analysisResult.disease_detection.diseases_found?.length > 0 
-                        ? analysisResult.disease_detection.diseases_found.join(', ')
+                        ? (analysisResult.disease_detection.diseases_found as string[]).join(', ')
                         : 'None detected'
                     }</p>
                     <p><span className="font-medium">Pests Found:</span> {
                       analysisResult.disease_detection.pest_issues?.length > 0 
-                        ? analysisResult.disease_detection.pest_issues.join(', ')
+                        ? (analysisResult.disease_detection.pest_issues as string[]).join(', ')
                         : 'None detected'
                     }</p>
                     <p><span className="font-medium">Severity:</span> {analysisResult.disease_detection.severity}</p>
@@ -583,7 +606,7 @@ export default function CollectionEventForm() {
                       <div>
                         <span className="font-medium">Immediate Actions:</span>
                         <ul className="list-disc list-inside ml-4 mt-1">
-                          {analysisResult.recommendations.immediate_actions.map((action, index) => (
+                          {analysisResult.recommendations.immediate_actions.map((action: string, index: number) => (
                             <li key={index}>{action}</li>
                           ))}
                         </ul>
@@ -593,7 +616,7 @@ export default function CollectionEventForm() {
                       <div>
                         <span className="font-medium">Treatment Suggestions:</span>
                         <ul className="list-disc list-inside ml-4 mt-1">
-                          {analysisResult.recommendations.treatment_suggestions.map((suggestion, index) => (
+                          {analysisResult.recommendations.treatment_suggestions.map((suggestion: string, index: number) => (
                             <li key={index}>{suggestion}</li>
                           ))}
                         </ul>
