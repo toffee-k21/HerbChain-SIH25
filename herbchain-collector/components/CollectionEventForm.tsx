@@ -161,6 +161,9 @@ export default function CollectionEventForm() {
     // Show success message
     setMessage(t("collection.success"));
   };
+
+  function getCookie(name:string) { const value = `; ${document.cookie}`; const parts = value.split(`; ${name}=`); if (parts.length === 2) return parts.pop()?.split(';').shift(); }
+
   useEffect(() => {
     // Create timestamp in IST (Indian Standard Time)
     const now = new Date();
@@ -170,7 +173,8 @@ export default function CollectionEventForm() {
     setFormData((prev) => ({ ...prev, timestamp: istTimestamp }));
 
     // Try to get collector ID from localStorage (if previously entered by user)
-    const collectorId = localStorage.getItem("collectorId");
+    // const collectorId = localStorage.getItem("collectorId");
+    const collectorId = getCookie("collectorId");
     if (collectorId) {
       setFormData((prev) => ({ ...prev, actorId: collectorId }));
     }
