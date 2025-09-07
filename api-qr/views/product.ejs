@@ -1,44 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Batch <%= product.batchId %></title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Batch Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Batch: <%= product.batchId %></h1>
-  <p><strong>Herb Name:</strong> <%= product.herbName %></p>
-  <p><strong>Quantity:</strong> <%= product.quantity %></p>
+<body class="bg-gray-100 min-h-screen p-6 bg-gradient-to-b from-white to-green-200">
+  <div class="max-w-5xl mx-auto space-y-6 ">
 
-  <h2>Steps</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Step Type</th>
-        <th>Timestamp</th>
-        <th>Actor ID</th>
-        <th>Quality</th>
-        <th>Location</th>
-        <th>Action</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% steps.forEach(step => { %>
-        <tr>
-          <td><%= step.stepType %></td>
-          <td><%= new Date(Number(step.timestamp) * 1000).toLocaleString() %></td>
-          <td><%= step.actorId %></td>
-          <td><%= step.quality %></td>
-          <td><%= step.location %></td>
-          <td><%= step.action %></td>
-          <td><%= step.details %></td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <!-- Header -->
+    <div class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800">🌱 Batch: <%= product.batchId %></h2>
+      <p class="mt-2"><span class="font-semibold">Herb Name:</span> <%= product.herbName %></p>
+      <p><span class="font-semibold">Quantity:</span> <%= product.quantity %></p>
+    </div>
+
+    <!-- Steps -->
+    <div>
+      <h3 class="text-xl font-semibold text-gray-700 mb-3">Processing Steps</h3>
+      <div class="space-y-4">
+        <% product.steps.forEach((step, idx) => { %>
+          <div class="bg-white shadow rounded-xl overflow-hidden">
+            <!-- Accordion Button -->
+            <button class="w-full flex items-center justify-between px-6 py-4 text-left text-gray-800 font-medium hover:bg-gray-50 focus:outline-none"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#step-<%= idx %>">
+              <div>
+                <span class="font-bold">Step <%= idx+1 %>:</span> <%= step.action %>
+              </div>
+              <div class="flex items-center gap-4">
+                <span class="text-sm text-gray-500">Quality:</span>
+                <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                  <%= step.quality %>
+                </span>
+                <svg class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Accordion Body -->
+            <div id="step-<%= idx %>" class="hidden border-t border-gray-200">
+              <div class="p-6 space-y-4 text-sm text-gray-700">
+                <p><span class="font-semibold">Timestamp:</span> <%= new Date(Number(step.timestamp) * 1000).toLocaleString() %></p>
+                <p><span class="font-semibold">Actor ID:</span> <code class="bg-gray-100 px-2 py-1 rounded"><%= step.actorId %></code></p>
+                <p><span class="font-semibold">Location:</span> 🌍 <%= step.location %></p>
+
+                <% let details; try { details = JSON.parse(step.details); } catch(e) { details = null; } %>
+                <% if (details ) { const d = details; %>
+                  <!-- Grid of cards -->
+                  <div class="grid md:grid-cols-2 gap-4 mt-4">
+                    <!-- Identification -->
+                    <div class="bg-blue-50 rounded-lg p-4 shadow">
+                      <h4 class="font-semibold text-blue-700 mb-2">Identification</h4>
+                      <p><span class="font-semibold">Common:</span> <%= d.plant_identification.common_name %></p>
+                      <p><span class="font-semibold">Scientific:</span> <em><%= d.plant_identification.scientific_name %></em></p>
+                      <p><span class="font-semibold">Family:</span> <%= d.plant_identification.family %></p>
+                      <p><span class="font-semibold">Confidence:</span> <%= d.plant_identification.confidence %></p>
+                    </div>
+
+                    <!-- Health -->
+                    <div class="bg-green-50 rounded-lg p-4 shadow">
+                      <h4 class="font-semibold text-green-700 mb-2">Health</h4>
+                      <p><span class="font-semibold">Overall:</span> <%= d.health_status.overall_health %></p>
+                      <p><span class="font-semibold">Score:</span> <%= d.health_status.health_score %>/10</p>
+                    </div>
+                  </div>
+
+                  <!-- Recommendations -->
+                  <div class="bg-yellow-50 rounded-lg p-4 shadow mt-4">
+                    <h4 class="font-semibold text-yellow-700 mb-2">Recommendations</h4>
+                    <ul class="list-disc ml-6 space-y-1">
+                      <% d.recommendations.immediate_actions.forEach(act => { %>
+                        <li><%= act %></li>
+                      <% }) %>
+                    </ul>
+                  </div>
+
+                  <!-- Notes -->
+                  <div class="bg-gray-50 rounded-lg p-4 shadow mt-4">
+                    <h4 class="font-semibold text-gray-700 mb-2">Notes</h4>
+                    <p><%= d.additional_notes %></p>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accordion Toggle Script -->
+  <script>
+    document.querySelectorAll("[data-toggle='collapse']").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = document.querySelector(btn.dataset.target);
+        const icon = btn.querySelector("svg");
+        target.classList.toggle("hidden");
+        icon.classList.toggle("rotate-180");
+      });
+    });
+  </script>
 </body>
 </html>
