@@ -94,10 +94,20 @@ export const translations = {
     
     // Wallet
     'wallet.title': 'Wallet',
+    'wallet.subtitle': 'Manage your blockchain wallet connection',
     'wallet.balance': 'Balance',
     'wallet.address': 'Address',
     'wallet.connect': 'Connect Wallet',
     'wallet.disconnect': 'Disconnect',
+    'wallet.connected': 'Connected',
+    'wallet.connection.success': 'Wallet connected successfully!',
+    'wallet.connection.failed': 'Wallet connection failed',
+    'wallet.connection.trying': 'Connecting...',
+    'wallet.browser.detected': 'Browser wallet detected',
+    'wallet.mobile.connect': 'Connect via WalletConnect',
+    'wallet.status.connected': 'Wallet Status: Connected',
+    'wallet.status.disconnected': 'Wallet Status: Disconnected',
+    'wallet.continue': 'Continue to Dashboard',
     
     // Dashboard
     'dashboard.title': 'Dashboard',
@@ -106,13 +116,52 @@ export const translations = {
     'dashboard.stats': 'Statistics',
     
     // Collections
-    'collection.title': 'Collection Event',
+    'collection.title': 'Record Collection',
+    'collection.subtitle': 'Record your herb collection ',
     'collection.create': 'Create Collection',
     'collection.date': 'Collection Date',
     'collection.location': 'Location',
     'collection.herbs': 'Herbs Collected',
     'collection.quantity': 'Quantity',
     'collection.quality': 'Quality',
+    'collection.submit': 'Record Collection',
+    'collection.success': 'Collection recorded successfully!',
+    
+    // Collection Form Fields
+    'collection.form.timestamp': 'Timestamp',
+    'collection.form.collectorId': 'Collector ID',
+    'collection.form.location.label': 'Location',
+    'collection.form.herbName': 'Herb Name',
+    'collection.form.herbName.placeholder': 'Enter herb name',
+    'collection.form.quantity.label': 'Quantity (kg)',
+    'collection.form.quantity.placeholder': 'Enter quantity',
+    'collection.form.image': 'Herb Image',
+    'collection.form.image.select': 'Select Image',
+    'collection.form.image.change': 'Change Image',
+    'collection.form.quality': 'Initial Quality Assessment',
+    'collection.form.quality.placeholder': 'Describe the quality, condition, and appearance',
+    'collection.form.details': 'Additional Details',
+    'collection.form.details.placeholder': 'Any additional information about the collection',
+    'collection.form.loading.collectorId': 'Loading...',
+    'collection.form.loading.location': 'Getting location...',
+    'collection.form.location.denied': 'Location access denied',
+    
+    // Image Selection Modal
+    'image.modal.title': 'Select Image',
+    'image.modal.camera': 'Take Photo',
+    'image.modal.upload': 'Upload from Gallery',
+    
+    // Health Analysis
+    'health.analyze': 'Analyze Plant Health',
+    'health.analyzing': 'Analyzing Health...',
+    'health.title': 'Plant Health Analysis Results',
+    'health.subtitle': 'AI-powered analysis of your herb\'s health condition',
+    'health.identification': 'Plant Identification',
+    'health.status': 'Health Status',
+    'health.quality': 'Quality Assessment',
+    'health.diseases': 'Disease & Pest Analysis',
+    'health.recommendations': 'Recommendations',
+    'health.error': 'Failed to analyze plant health. Please try again.',
     
     // Status messages
     'status.success': 'Operation completed successfully',
@@ -245,10 +294,20 @@ export const translations = {
     
     // Wallet
     'wallet.title': 'वॉलेट',
+    'wallet.subtitle': 'अपना ब्लॉकचेन वॉलेट कनेक्शन प्रबंधित करें',
     'wallet.balance': 'शेष राशि',
     'wallet.address': 'पता',
     'wallet.connect': 'वॉलेट कनेक्ट करें',
     'wallet.disconnect': 'डिस्कनेक्ट',
+    'wallet.connected': 'कनेक्ट किया गया',
+    'wallet.connection.success': 'वॉलेट सफलतापूर्वक कनेक्ट हुआ!',
+    'wallet.connection.failed': 'वॉलेट कनेक्शन विफल',
+    'wallet.connection.trying': 'कनेक्ट हो रहा है...',
+    'wallet.browser.detected': 'ब्राउज़र वॉलेट का पता चला',
+    'wallet.mobile.connect': 'WalletConnect के माध्यम से कनेक्ट करें',
+    'wallet.status.connected': 'वॉलेट स्थिति: कनेक्ट',
+    'wallet.status.disconnected': 'वॉलेट स्थिति: डिस्कनेक्ट',
+    'wallet.continue': 'डैशबोर्ड पर जाएं',
     
     // Dashboard
     'dashboard.title': 'डैशबोर्ड',
@@ -258,12 +317,51 @@ export const translations = {
     
     // Collections
     'collection.title': 'संग्रह कार्यक्रम',
+    'collection.subtitle': 'अपनी जड़ी-बूटी संग्रह घटना दर्ज करें',
     'collection.create': 'संग्रह बनाएं',
     'collection.date': 'संग्रह तिथि',
     'collection.location': 'स्थान',
     'collection.herbs': 'एकत्रित जड़ी-बूटियां',
     'collection.quantity': 'मात्रा',
     'collection.quality': 'गुणवत्ता',
+    'collection.submit': 'संग्रह दर्ज करें',
+    'collection.success': 'संग्रह सफलतापूर्वक दर्ज किया गया!',
+    
+    // Collection Form Fields
+    'collection.form.timestamp': 'समयचिह्न',
+    'collection.form.collectorId': 'संग्रहकर्ता आईडी',
+    'collection.form.location.label': 'स्थान',
+    'collection.form.herbName': 'जड़ी-बूटी का नाम',
+    'collection.form.herbName.placeholder': 'जड़ी-बूटी का नाम दर्ज करें',
+    'collection.form.quantity.label': 'मात्रा (किलो)',
+    'collection.form.quantity.placeholder': 'मात्रा दर्ज करें',
+    'collection.form.image': 'जड़ी-बूटी की तस्वीर',
+    'collection.form.image.select': 'तस्वीर चुनें',
+    'collection.form.image.change': 'तस्वीर बदलें',
+    'collection.form.quality': 'प्रारंभिक गुणवत्ता आकलन',
+    'collection.form.quality.placeholder': 'गुणवत्ता, स्थिति और रूप-रंग का वर्णन करें',
+    'collection.form.details': 'अतिरिक्त विवरण',
+    'collection.form.details.placeholder': 'संग्रह के बारे में कोई अतिरिक्त जानकारी',
+    'collection.form.loading.collectorId': 'लोड हो रहा है...',
+    'collection.form.loading.location': 'स्थान प्राप्त कर रहे हैं...',
+    'collection.form.location.denied': 'स्थान पहुंच अस्वीकार',
+    
+    // Image Selection Modal
+    'image.modal.title': 'तस्वीर चुनें',
+    'image.modal.camera': 'फोटो खींचें',
+    'image.modal.upload': 'गैलरी से अपलोड करें',
+    
+    // Health Analysis
+    'health.analyze': 'पौधे की स्वास्थ्य जांच करें',
+    'health.analyzing': 'स्वास्थ्य जांच हो रही है...',
+    'health.title': 'पौधे की स्वास्थ्य जांच के परिणाम',
+    'health.subtitle': 'आपकी जड़ी-बूटी की स्वास्थ्य स्थिति का AI-संचालित विश्लेषण',
+    'health.identification': 'पौधे की पहचान',
+    'health.status': 'स्वास्थ्य स्थिति',
+    'health.quality': 'गुणवत्ता आकलन',
+    'health.diseases': 'रोग और कीट विश्लेषण',
+    'health.recommendations': 'सुझाव',
+    'health.error': 'पौधे की स्वास्थ्य जांच असफल। कृपया पुनः प्रयास करें।',
     
     // Status messages
     'status.success': 'कार्यवाही सफलतापूर्वक पूरी हुई',

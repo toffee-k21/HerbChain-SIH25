@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       },
       "health_status": {
         "overall_health": "Overall health status",
-        "health_score": "Score from 1-10",
+        "health_score": "Score from 0-10",
         "visible_symptoms": ["List of any visible symptoms or issues"]
       },
       "disease_detection": {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         "severity": "Severity level (None/Mild/Moderate/Severe)"
       },
       "quality_assessment": {
-        "quality_rating": "Rating from 1-10",
+        "quality_rating": "Rating from 0-10",
         "marketability": "Market quality assessment",
         "harvest_readiness": "Ready for harvest? (Yes/No/Partial)",
         "storage_potential": "Storage potential assessment"
