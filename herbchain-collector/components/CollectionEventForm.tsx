@@ -17,11 +17,20 @@ export default function CollectionEventForm() {
   const [details, setDetails] = useState<string>("");
   const [message, setMessage] = useState<string>();
 
+  function getCookie(name:string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+  }
+
   useEffect(() => {
     // Set timestamp and actorId on mount
     const now = new Date().toISOString().slice(0, 16);
     setFormData(prev => ({ ...prev, timestamp: now }));
-    const actorId = localStorage.getItem("actorId");
+    // const actorId = localStorage.getItem("actorId");
+    
+    // Example usage
+    const actorId = getCookie("collectorId");
     if (actorId) setFormData(prev => ({ ...prev, actorId }));
   }, []);
 

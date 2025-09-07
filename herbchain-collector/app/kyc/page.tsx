@@ -79,7 +79,9 @@ export default function KycPage() {
 
     const data  = await resp.json();
     console.log("data",data);
-    localStorage.setItem("collectorId", data.collectorId.id); //todo : use cookies and jwt-token :* this is temporary
+    // localStorage.setItem("collectorId", data.collectorId.id); //todo : use cookies and jwt-token :* this is temporary
+    document.cookie = `collectorId=${data.collectorId.id}; path=/; max-age=86400`; // 1 day expiry
+
 
     router.push("/wallet");
   };
