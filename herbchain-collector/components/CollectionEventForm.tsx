@@ -104,13 +104,11 @@ export default function CollectionEventForm() {
     const now = new Date().toISOString().slice(0, 16);
     setFormData((prev) => ({ ...prev, timestamp: now }));
 
-    // Get collector ID from localStorage or generate one if doesn't exist
-    let collectorId = localStorage.getItem("collectorId");
-    if (!collectorId) {
-      collectorId = `COL-${Date.now()}`;
-      localStorage.setItem("collectorId", collectorId);
+    // Try to get collector ID from localStorage (if previously entered by user)
+    const collectorId = localStorage.getItem("collectorId");
+    if (collectorId) {
+      setFormData((prev) => ({ ...prev, actorId: collectorId }));
     }
-    setFormData((prev) => ({ ...prev, actorId: collectorId }));
 
     // Get current location
     if (navigator.geolocation) {
@@ -169,7 +167,7 @@ export default function CollectionEventForm() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.2 }}
               className="space-y-2"
             >
               {/* <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">

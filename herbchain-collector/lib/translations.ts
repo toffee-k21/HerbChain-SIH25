@@ -94,10 +94,20 @@ export const translations = {
     
     // Wallet
     'wallet.title': 'Wallet',
+    'wallet.subtitle': 'Manage your blockchain wallet connection',
     'wallet.balance': 'Balance',
     'wallet.address': 'Address',
     'wallet.connect': 'Connect Wallet',
     'wallet.disconnect': 'Disconnect',
+    'wallet.connected': 'Connected',
+    'wallet.connection.success': 'Wallet connected successfully!',
+    'wallet.connection.failed': 'Wallet connection failed',
+    'wallet.connection.trying': 'Connecting...',
+    'wallet.browser.detected': 'Browser wallet detected',
+    'wallet.mobile.connect': 'Connect via WalletConnect',
+    'wallet.status.connected': 'Wallet Status: Connected',
+    'wallet.status.disconnected': 'Wallet Status: Disconnected',
+    'wallet.continue': 'Continue to Dashboard',
     
     // Dashboard
     'dashboard.title': 'Dashboard',
@@ -272,10 +282,20 @@ export const translations = {
     
     // Wallet
     'wallet.title': 'वॉलेट',
+    'wallet.subtitle': 'अपना ब्लॉकचेन वॉलेट कनेक्शन प्रबंधित करें',
     'wallet.balance': 'शेष राशि',
     'wallet.address': 'पता',
     'wallet.connect': 'वॉलेट कनेक्ट करें',
     'wallet.disconnect': 'डिस्कनेक्ट',
+    'wallet.connected': 'कनेक्ट किया गया',
+    'wallet.connection.success': 'वॉलेट सफलतापूर्वक कनेक्ट हुआ!',
+    'wallet.connection.failed': 'वॉलेट कनेक्शन विफल',
+    'wallet.connection.trying': 'कनेक्ट हो रहा है...',
+    'wallet.browser.detected': 'ब्राउज़र वॉलेट का पता चला',
+    'wallet.mobile.connect': 'WalletConnect के माध्यम से कनेक्ट करें',
+    'wallet.status.connected': 'वॉलेट स्थिति: कनेक्ट',
+    'wallet.status.disconnected': 'वॉलेट स्थिति: डिस्कनेक्ट',
+    'wallet.continue': 'डैशबोर्ड पर जाएं',
     
     // Dashboard
     'dashboard.title': 'डैशबोर्ड',
