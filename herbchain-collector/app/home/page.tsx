@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-const page = () => {
+const HomePage = () => {
   const router = useRouter();
   return (
     <div>
@@ -17,4 +17,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default HomePage;
