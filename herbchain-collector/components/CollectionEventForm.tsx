@@ -428,10 +428,11 @@ export default function CollectionEventForm() {
                 {t("collection.form.quality")}
               </label>
               <textarea
+              disabled
                 name="quality"
                 value={formData.quality}
                 onChange={handleChange}
-                className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                className="w-full p-4 border border-green-200 bg-green-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
                 placeholder={t("collection.form.quality.placeholder")}
                 rows={3}
               />
