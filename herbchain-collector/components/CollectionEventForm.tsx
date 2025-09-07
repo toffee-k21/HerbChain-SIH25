@@ -18,9 +18,16 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ImageSelectionModal } from "./ImageSelectionModal";
 import { useTranslation } from "@/hooks/useTranslation";
-import GeminiAnalyzer from "./GeminiAnalyzer";
 
 export default function CollectionEventForm() {
   const { t } = useTranslation();
@@ -39,7 +46,10 @@ export default function CollectionEventForm() {
   const [message, setMessage] = useState<string>();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [details, setDetails] = useState<string>("");
+  const [isHealthDialogOpen, setIsHealthDialogOpen] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [healthError, setHealthError] = useState<string>("");
 
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
@@ -52,6 +62,47 @@ export default function CollectionEventForm() {
     reader.readAsDataURL(selectedFile);
 
     setMessage(`Selected: ${selectedFile.name}`);
+  };
+
+  const analyzeHealth = async () => {
+    if (!file) return;
+
+    setIsAnalyzing(true);
+    setHealthError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("/api/analyze-plant", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Analysis failed");
+      }
+
+      const result = await response.json();
+      setAnalysisResult(result.analysis); // Extract the analysis object
+      
+      // Auto-populate the quality assessment field
+      if (result.analysis.health_status) {
+        const healthSummary = `Health Score: ${result.analysis.health_status.health_score} - ${result.analysis.health_status.overall_health}. ${
+          result.analysis.health_status.visible_symptoms?.length > 0 
+            ? `Symptoms: ${result.analysis.health_status.visible_symptoms.join(', ')}.`
+            : 'No visible symptoms detected.'
+        } ${result.analysis.additional_notes || ''}`;
+        setFormData(prev => ({ ...prev, quality: healthSummary }));
+      }
+      
+      setIsHealthDialogOpen(true);
+    } catch (error) {
+      console.error("Health analysis failed:", error);
+      setHealthError(t('health.error'));
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const uploadFile = async () => {
@@ -103,8 +154,12 @@ export default function CollectionEventForm() {
     setMessage(t("collection.success"));
   };
   useEffect(() => {
-    const now = new Date().toISOString().slice(0, 16);
-    setFormData((prev) => ({ ...prev, timestamp: now }));
+    // Create timestamp in IST (Indian Standard Time)
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istTime = new Date(now.getTime() + istOffset);
+    const istTimestamp = istTime.toISOString().slice(0, 16);
+    setFormData((prev) => ({ ...prev, timestamp: istTimestamp }));
 
     // Try to get collector ID from localStorage (if previously entered by user)
     const collectorId = localStorage.getItem("collectorId");
@@ -209,6 +264,36 @@ export default function CollectionEventForm() {
 
               {message && <p className="text-sm text-green-600">{message}</p>}
             </motion.div>
+
+            {/* Health Analysis Button */}
+            {file && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.25 }}
+                className="space-y-3"
+              >
+                <Button
+                  type="button"
+                  onClick={analyzeHealth}
+                  disabled={isAnalyzing}
+                  className="w-full"
+                >
+                  {isAnalyzing ? t('health.analyzing') : t('health.analyze')}
+                </Button>
+                
+                {analysisResult && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsHealthDialogOpen(true)}
+                    className="w-full py-2 border-primary text-primary hover:bg-primary-50 text-sm"
+                  >
+                    View Health Analysis
+                  </Button>
+                )}
+              </motion.div>
+            )}
 
             {/* Timestamp Field */}
             <motion.div
@@ -397,6 +482,148 @@ export default function CollectionEventForm() {
         onClose={() => setIsImageModalOpen(false)}
         onFileSelect={handleFileSelect}
       />
+
+      {/* Health Analysis Dialog */}
+      <Dialog open={isHealthDialogOpen} onOpenChange={setIsHealthDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-primary">
+              🌿 {t('health.title')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('health.subtitle')}
+            </DialogDescription>
+          </DialogHeader>
+
+          {analysisResult && (
+            <div className="space-y-4">
+              {/* Plant Identification */}
+              {analysisResult.plant_identification && (
+                <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                  <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
+                    🌱 {t('health.identification')}
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                    <p><span className="font-medium">Common Name:</span> {analysisResult.plant_identification.common_name}</p>
+                    <p><span className="font-medium">Scientific:</span> {analysisResult.plant_identification.scientific_name}</p>
+                    <p><span className="font-medium">Confidence:</span> 
+                      <span className={`ml-2 px-2 py-1 rounded text-xs ${
+                        analysisResult.plant_identification.confidence === 'High' ? 'bg-green-100 text-green-800' :
+                        analysisResult.plant_identification.confidence === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {analysisResult.plant_identification.confidence}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Health Status */}
+              {analysisResult.health_status && (
+                <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                  <h4 className="font-semibold text-green-700 mb-2 flex items-center gap-2">
+                    💚 {t('health.status')}
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">Overall Health:</span> {analysisResult.health_status.overall_health}</p>
+                    <p><span className="font-medium">Health Score:</span> {analysisResult.health_status.health_score}/10</p>
+                    {analysisResult.health_status.visible_symptoms && analysisResult.health_status.visible_symptoms.length > 0 && (
+                      <p><span className="font-medium">Symptoms:</span> {analysisResult.health_status.visible_symptoms.join(', ')}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Quality Assessment */}
+              {analysisResult.quality_assessment && (
+                <div className="p-4 bg-orange-50 rounded-xl border border-orange-200">
+                  <h4 className="font-semibold text-orange-700 mb-2 flex items-center gap-2">
+                    ⭐ {t('health.quality')}
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">Quality Rating:</span> {analysisResult.quality_assessment.quality_rating}/10</p>
+                    <p><span className="font-medium">Harvest Ready:</span> {analysisResult.quality_assessment.harvest_readiness}</p>
+                    <p><span className="font-medium">Marketability:</span> {analysisResult.quality_assessment.marketability}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Disease & Pest Analysis */}
+              {analysisResult.disease_detection && (
+                <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                  <h4 className="font-semibold text-purple-700 mb-2 flex items-center gap-2">
+                    🦠 {t('health.diseases')}
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">Diseases Found:</span> {
+                      analysisResult.disease_detection.diseases_found?.length > 0 
+                        ? analysisResult.disease_detection.diseases_found.join(', ')
+                        : 'None detected'
+                    }</p>
+                    <p><span className="font-medium">Pests Found:</span> {
+                      analysisResult.disease_detection.pest_issues?.length > 0 
+                        ? analysisResult.disease_detection.pest_issues.join(', ')
+                        : 'None detected'
+                    }</p>
+                    <p><span className="font-medium">Severity:</span> {analysisResult.disease_detection.severity}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Recommendations */}
+              {analysisResult.recommendations && (
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                  <h4 className="font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                    📝 {t('health.recommendations')}
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {analysisResult.recommendations.immediate_actions && analysisResult.recommendations.immediate_actions.length > 0 && (
+                      <div>
+                        <span className="font-medium">Immediate Actions:</span>
+                        <ul className="list-disc list-inside ml-4 mt-1">
+                          {analysisResult.recommendations.immediate_actions.map((action, index) => (
+                            <li key={index}>{action}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {analysisResult.recommendations.treatment_suggestions && analysisResult.recommendations.treatment_suggestions.length > 0 && (
+                      <div>
+                        <span className="font-medium">Treatment Suggestions:</span>
+                        <ul className="list-disc list-inside ml-4 mt-1">
+                          {analysisResult.recommendations.treatment_suggestions.map((suggestion, index) => (
+                            <li key={index}>{suggestion}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {analysisResult.recommendations.harvest_timing && (
+                      <p><span className="font-medium">Harvest Timing:</span> {analysisResult.recommendations.harvest_timing}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Notes */}
+              {analysisResult.additional_notes && (
+                <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                  <h4 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    📋 Additional Notes
+                  </h4>
+                  <p className="text-sm text-gray-700">{analysisResult.additional_notes}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {healthError && (
+            <div className="p-4 bg-red-50 rounded-xl border border-red-200">
+              <p className="text-red-700 text-sm">{healthError}</p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

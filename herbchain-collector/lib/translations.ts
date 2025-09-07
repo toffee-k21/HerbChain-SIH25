@@ -151,6 +151,18 @@ export const translations = {
     'image.modal.camera': 'Take Photo',
     'image.modal.upload': 'Upload from Gallery',
     
+    // Health Analysis
+    'health.analyze': 'Analyze Plant Health',
+    'health.analyzing': 'Analyzing Health...',
+    'health.title': 'Plant Health Analysis Results',
+    'health.subtitle': 'AI-powered analysis of your herb\'s health condition',
+    'health.identification': 'Plant Identification',
+    'health.status': 'Health Status',
+    'health.quality': 'Quality Assessment',
+    'health.diseases': 'Disease & Pest Analysis',
+    'health.recommendations': 'Recommendations',
+    'health.error': 'Failed to analyze plant health. Please try again.',
+    
     // Status messages
     'status.success': 'Operation completed successfully',
     'status.error': 'An error occurred',
@@ -338,6 +350,18 @@ export const translations = {
     'image.modal.title': 'तस्वीर चुनें',
     'image.modal.camera': 'फोटो खींचें',
     'image.modal.upload': 'गैलरी से अपलोड करें',
+    
+    // Health Analysis
+    'health.analyze': 'पौधे की स्वास्थ्य जांच करें',
+    'health.analyzing': 'स्वास्थ्य जांच हो रही है...',
+    'health.title': 'पौधे की स्वास्थ्य जांच के परिणाम',
+    'health.subtitle': 'आपकी जड़ी-बूटी की स्वास्थ्य स्थिति का AI-संचालित विश्लेषण',
+    'health.identification': 'पौधे की पहचान',
+    'health.status': 'स्वास्थ्य स्थिति',
+    'health.quality': 'गुणवत्ता आकलन',
+    'health.diseases': 'रोग और कीट विश्लेषण',
+    'health.recommendations': 'सुझाव',
+    'health.error': 'पौधे की स्वास्थ्य जांच असफल। कृपया पुनः प्रयास करें।',
     
     // Status messages
     'status.success': 'कार्यवाही सफलतापूर्वक पूरी हुई',
