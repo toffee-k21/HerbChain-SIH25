@@ -106,13 +106,40 @@ export const translations = {
     'dashboard.stats': 'Statistics',
     
     // Collections
-    'collection.title': 'Collection Event',
+    'collection.title': 'Record Collection',
+    'collection.subtitle': 'Record your herb collection ',
     'collection.create': 'Create Collection',
     'collection.date': 'Collection Date',
     'collection.location': 'Location',
     'collection.herbs': 'Herbs Collected',
     'collection.quantity': 'Quantity',
     'collection.quality': 'Quality',
+    'collection.submit': 'Record Collection',
+    'collection.success': 'Collection recorded successfully!',
+    
+    // Collection Form Fields
+    'collection.form.timestamp': 'Timestamp',
+    'collection.form.collectorId': 'Collector ID',
+    'collection.form.location.label': 'Location',
+    'collection.form.herbName': 'Herb Name',
+    'collection.form.herbName.placeholder': 'Enter herb name',
+    'collection.form.quantity.label': 'Quantity (kg)',
+    'collection.form.quantity.placeholder': 'Enter quantity',
+    'collection.form.image': 'Herb Image',
+    'collection.form.image.select': 'Select Image',
+    'collection.form.image.change': 'Change Image',
+    'collection.form.quality': 'Initial Quality Assessment',
+    'collection.form.quality.placeholder': 'Describe the quality, condition, and appearance',
+    'collection.form.details': 'Additional Details',
+    'collection.form.details.placeholder': 'Any additional information about the collection',
+    'collection.form.loading.collectorId': 'Loading...',
+    'collection.form.loading.location': 'Getting location...',
+    'collection.form.location.denied': 'Location access denied',
+    
+    // Image Selection Modal
+    'image.modal.title': 'Select Image',
+    'image.modal.camera': 'Take Photo',
+    'image.modal.upload': 'Upload from Gallery',
     
     // Status messages
     'status.success': 'Operation completed successfully',
@@ -258,12 +285,39 @@ export const translations = {
     
     // Collections
     'collection.title': 'संग्रह कार्यक्रम',
+    'collection.subtitle': 'अपनी जड़ी-बूटी संग्रह घटना दर्ज करें',
     'collection.create': 'संग्रह बनाएं',
     'collection.date': 'संग्रह तिथि',
     'collection.location': 'स्थान',
     'collection.herbs': 'एकत्रित जड़ी-बूटियां',
     'collection.quantity': 'मात्रा',
     'collection.quality': 'गुणवत्ता',
+    'collection.submit': 'संग्रह दर्ज करें',
+    'collection.success': 'संग्रह सफलतापूर्वक दर्ज किया गया!',
+    
+    // Collection Form Fields
+    'collection.form.timestamp': 'समयचिह्न',
+    'collection.form.collectorId': 'संग्रहकर्ता आईडी',
+    'collection.form.location.label': 'स्थान',
+    'collection.form.herbName': 'जड़ी-बूटी का नाम',
+    'collection.form.herbName.placeholder': 'जड़ी-बूटी का नाम दर्ज करें',
+    'collection.form.quantity.label': 'मात्रा (किलो)',
+    'collection.form.quantity.placeholder': 'मात्रा दर्ज करें',
+    'collection.form.image': 'जड़ी-बूटी की तस्वीर',
+    'collection.form.image.select': 'तस्वीर चुनें',
+    'collection.form.image.change': 'तस्वीर बदलें',
+    'collection.form.quality': 'प्रारंभिक गुणवत्ता आकलन',
+    'collection.form.quality.placeholder': 'गुणवत्ता, स्थिति और रूप-रंग का वर्णन करें',
+    'collection.form.details': 'अतिरिक्त विवरण',
+    'collection.form.details.placeholder': 'संग्रह के बारे में कोई अतिरिक्त जानकारी',
+    'collection.form.loading.collectorId': 'लोड हो रहा है...',
+    'collection.form.loading.location': 'स्थान प्राप्त कर रहे हैं...',
+    'collection.form.location.denied': 'स्थान पहुंच अस्वीकार',
+    
+    // Image Selection Modal
+    'image.modal.title': 'तस्वीर चुनें',
+    'image.modal.camera': 'फोटो खींचें',
+    'image.modal.upload': 'गैलरी से अपलोड करें',
     
     // Status messages
     'status.success': 'कार्यवाही सफलतापूर्वक पूरी हुई',

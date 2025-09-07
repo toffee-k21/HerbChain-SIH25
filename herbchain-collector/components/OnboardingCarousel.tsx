@@ -269,7 +269,7 @@ export const OnboardingCarousel = () => {
                     key={index}
                     variant={button.variant}
                     onClick={button.action}
-                    className={`w-full py-6 text-lg font-semibold ${
+                    className={`w-full py-6 text-base font-semibold ${
                       button.variant === "default"
                         ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary"
                         : "border-primary text-primary hover:bg-primary/10"
@@ -312,7 +312,7 @@ export const OnboardingCarousel = () => {
           </div> */}
 
           <Button
-            variant="ghost"
+            // variant="ghost"
             onClick={nextStep}
             disabled={currentStep === steps.length - 1}
             className="flex items-center space-x-2"
