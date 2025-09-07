@@ -1,5 +1,21 @@
 {
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1"
-  }
+  "name": "herbchain",
+  "version": "1.0.0",
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toffee-k21/HerbChain-SIH25.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/toffee-k21/HerbChain-SIH25/issues"
+  },
+  "homepage": "https://github.com/toffee-k21/HerbChain-SIH25#readme"
 }

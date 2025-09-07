@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Record Step for <%= batchId %></title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.5.0/dist/ethers.umd.min.js"></script>
+  <!-- WalletConnect v2 Ethereum Provider (UMD) -->
+  <script src="https://unpkg.com/@walletconnect/ethereum-provider/dist/umd/index.min.js"></script>
+</head>
+<body>
+  <h1>Record Step for Batch: <%= batchId %></h1>
+
+  <form id="stepForm">
+    <label>Step Type:</label>
+    <select id="stepType">
+      <option value="0">Collection</option>
+      <option value="1">Processing</option>
+      <option value="2">Testing</option>
+      <option value="3">Shipment</option>
+      <option value="4">Retail</option>
+    </select><br><br>
+
+    <label>Actor ID:</label>
+    <input type="text" id="actorId" required><br><br>
+
+    <label>Quality:</label>
+    <input type="text" id="quality"><br><br>
+
+    <label>Location:</label>
+    <input type="text" id="location"><br><br>
+
+    <label>Action:</label>
+    <input type="text" id="action" required><br><br>
+
+    <label>Details:</label>
+    <input type="text" id="details"><br><br>
+
+    <button type="submit">Record Step</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const batchId = "<%= batchId %>";
+    const contractAddress = "0x275a703827ee97750b4dF88388880878a2cc5cdc"; // replace with your deployed contract
+    const abi = [
+      "function recordStep(string batchId,uint8 stepType,string actorId,string quality,string location,string action,string details) public"
+    ];
+
+    const statusEl = document.getElementById("status");
+    const form = document.getElementById("stepForm");
+
+    let wcProvider = null;
+
+    async function connectWallet() {
+      // ✅ Desktop MetaMask
+      if (window.ethereum) {
+        await ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        return new ethers.Contract(contractAddress, abi, signer);
+      }
+
+      // ✅ Mobile / WalletConnect v2
+      if (!wcProvider) {
+        wcProvider = await window.EthereumProvider.init({
+          projectId: "29a699b060ba734c4986b31205e83da5", // your WalletConnect projectId
+          chains: [11155111], // Sepolia
+          showQrModal: true,
+        });
+      }
+
+      await wcProvider.enable();
+      const ethersProvider = new ethers.BrowserProvider(wcProvider);
+      const signer = await ethersProvider.getSigner();
+      return new ethers.Contract(contractAddress, abi, signer);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        statusEl.innerText = "Connecting wallet...";
+        const contract = await connectWallet();
+
+        const tx = await contract.recordStep(
+          batchId,
+          parseInt(document.getElementById("stepType").value),
+          document.getElementById("actorId").value,
+          document.getElementById("quality").value,
+          document.getElementById("location").value,
+          document.getElementById("action").value,
+          document.getElementById("details").value
+        );
+
+        statusEl.innerText = "Transaction sent: " + tx.hash;
+        await tx.wait();
+        statusEl.innerText = "✅ Transaction confirmed: " + tx.hash;
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = "❌ Error: " + (err.message || err);
+      }
+    });
+  </script>
+</body>
+</html>

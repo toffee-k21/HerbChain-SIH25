@@ -11,10 +11,10 @@ function ConciseResultsView({ analysis }) {
       
       {/* Plant Identification */}
       <div style={{
-        // backgroundColor: '#172554',
+        backgroundColor: '#172554',
         padding: '15px',
         borderRadius: '8px',
-        // border: '1px solid #1e40af'
+        border: '1px solid #1e40af'
       }}>
         <h4 style={{ color: '#bfdbfe', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
           🌱 Plant Identification
@@ -497,60 +497,6 @@ export default function GeminiAnalyzer({file, setFile, details, setDetails}) {
             </div>
           )}
 
-          {/* Quick Summary Cards - if structured data is available */}
-          {analysisResult.plant_identification && (
-            <div style={{ marginTop: '20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
-                
-                {/* Plant ID Card */}
-                <div style={{
-                  // backgroundColor: '#172554',
-                  padding: '15px',
-                  borderRadius: '8px',
-                  // border: '1px solid #1e40af'
-                }}>
-                  <h4 style={{ color: '#bfdbfe', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
-                    🌱 Plant Identification
-                  </h4>
-                  <p><strong>Common:</strong> {analysisResult.plant_identification.common_name}</p>
-                  <p><strong>Scientific:</strong> {analysisResult.plant_identification.scientific_name}</p>
-                  <p><strong>Confidence:</strong> {analysisResult.plant_identification.confidence}</p>
-                </div>
-
-                {/* Health Status Card */}
-                {analysisResult.health_status && (
-                  <div style={{
-                    backgroundColor: '#052e16',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    border: '1px solid #15803d'
-                  }}>
-                    <h4 style={{ color: '#4ade80', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
-                      💚 Health Status
-                    </h4>
-                    <p><strong>Overall:</strong> {analysisResult.health_status.overall_health}</p>
-                    <p><strong>Score:</strong> {analysisResult.health_status.health_score}/10</p>
-                  </div>
-                )}
-
-                {/* Quality Card */}
-                {analysisResult.quality_assessment && (
-                  <div style={{
-                    backgroundColor: '#422006',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    border: '1px solid #b45309'
-                  }}>
-                    <h4 style={{ color: '#f59e0b', fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>
-                      ⭐ Quality Rating
-                    </h4>
-                    <p><strong>Rating:</strong> {analysisResult.quality_assessment.quality_rating}/10</p>
-                    <p><strong>Market Ready:</strong> {analysisResult.quality_assessment.marketability}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
