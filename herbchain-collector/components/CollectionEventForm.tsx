@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from "uuid";
 import { recordCollection } from '@/lib/wallet';
 import GeminiAnalyzer from "./GeminiAnalyzer";
+import { useRouter } from 'next/navigation';
 
 export default function CollectionEventForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     herbName: "",
     timestamp: "",
@@ -62,6 +64,7 @@ export default function CollectionEventForm() {
     const batchId = uuidv4();
     const { quantity, actorId, location, quality, herbName } = formData;
     recordCollection(batchId, herbName, quantity, actorId, quality, location, details);
+    router.push(`/qr-code/${batchId}`);
   };
 
   const uploadFile = async () => {
