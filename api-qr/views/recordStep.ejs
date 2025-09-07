@@ -1,43 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Record Step for <%= batchId %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.5.0/dist/ethers.umd.min.js"></script>
-  <!-- WalletConnect v2 Ethereum Provider (UMD) -->
   <script src="https://unpkg.com/@walletconnect/ethereum-provider/dist/umd/index.min.js"></script>
 </head>
-<body>
-  <h1>Record Step for Batch: <%= batchId %></h1>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-green-200">
 
-  <form id="stepForm">
-    <label>Step Type:</label>
-    <select id="stepType">
-      <option value="0">Collection</option>
-      <option value="1">Processing</option>
-      <option value="2">Testing</option>
-      <option value="3">Shipment</option>
-      <option value="4">Retail</option>
-    </select><br><br>
+  <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-lg">
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-green-700 text-center mb-6">
+      Record Step
+    </h1>
+    <p class="text-center text-sm text-gray-600 mb-6">
+      Batch ID: <span class="font-mono text-gray-800"><%= batchId %></span>
+    </p>
 
-    <label>Actor ID:</label>
-    <input type="text" id="actorId" required><br><br>
+    <!-- Form -->
+    <form id="stepForm" class="space-y-4">
+      <!-- Step Type -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Step Type</label>
+        <select id="stepType" class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500">
+          <option value="0">Collection</option>
+          <option value="1">Processing</option>
+          <option value="2">Testing</option>
+          <option value="3">Shipment</option>
+          <option value="4">Retail</option>
+        </select>
+      </div>
 
-    <label>Quality:</label>
-    <input type="text" id="quality"><br><br>
+      <!-- Actor ID -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Actor ID</label>
+        <input type="text" id="actorId" required class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500">
+      </div>
 
-    <label>Location:</label>
-    <input type="text" id="location"><br><br>
+      <!-- Quality -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quality</label>
+        <input type="text" id="quality" placeholder=" e.g., 8/10" class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500">
+      </div>
 
-    <label>Action:</label>
-    <input type="text" id="action" required><br><br>
+      <!-- Location -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+        <input type="text" id="location" placeholder=" lat,long" class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500">
+      </div>
 
-    <label>Details:</label>
-    <input type="text" id="details"><br><br>
+      <!-- Action -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Action</label>
+        <input type="text" id="action" required class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500">
+      </div>
 
-    <button type="submit">Record Step</button>
-  </form>
+      <!-- Details -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Details (JSON)</label>
+        <textarea id="details" rows="3" placeholder=' {"key":"value"}' class="w-full border-gray-300 rounded-sm shadow-sm focus:ring-green-500 focus:border-green-500 font-mono"></textarea>
+      </div>
 
-  <p id="status"></p>
+      <!-- Submit -->
+      <div class="pt-4">
+        <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg shadow hover:bg-green-700 transition">
+          Record Step
+        </button>
+      </div>
+    </form>
+
+    <!-- Status -->
+    <p id="status" class="text-center mt-4 text-sm text-gray-700"></p>
+  </div>
 
   <script>
     const batchId = "<%= batchId %>";
@@ -78,7 +113,7 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
-        statusEl.innerText = "Connecting wallet...";
+        statusEl.innerText = "⏳ Connecting wallet...";
         const contract = await connectWallet();
 
         const tx = await contract.recordStep(
@@ -91,7 +126,7 @@
           document.getElementById("details").value
         );
 
-        statusEl.innerText = "Transaction sent: " + tx.hash;
+        statusEl.innerText = "🚀 Transaction sent: " + tx.hash;
         await tx.wait();
         statusEl.innerText = "✅ Transaction confirmed: " + tx.hash;
       } catch (err) {
