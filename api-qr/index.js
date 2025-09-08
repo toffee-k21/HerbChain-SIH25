@@ -26,9 +26,11 @@ app.get("/record-step/:batchId", (req, res) => {
     res.render("recordStep", { batchId, contract_address });
   });
 
-  app.get("/dashboard/:batchId", (req, res) => {
+  app.get("/dashboard/:batchId", async (req, res) => {
     const { batchId } = req.params;
-    res.render("dashboard", { batchId });
+    const product = await contract.getProduct(batchId);
+    const steps = await contract.getSteps(batchId);
+    res.render("dashboard", { batchId, product, steps});
   });
 
 // Route: /product/:batchId
