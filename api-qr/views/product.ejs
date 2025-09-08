@@ -2,43 +2,310 @@
 <html>
 <head>
   <title>Batch <%= product.batchId %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: Arial; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    /* Navbar improved */
+    .navbar {
+      background-color: #2c6b3a;
+      padding: 12px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-link:hover {
+      background-color: #1f4d27;
+    }
+    .nav-link.active {
+      background-color: #145a2e;
+    }
+
+    /* Section wrappers */
+    .section {
+      padding: 20px;
+      margin: 10px auto;
+      border-radius: 15px;
+      max-width: 1000px;
+      box-sizing: border-box;
+    }
+
+    /* Top section without card */
+    .top-section {
+      background: none;
+      box-shadow: none;
+      border-radius: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h1, h2 {
+      margin-bottom: 8px;
+      text-align: center;
+      color: #2c6b3a;
+    }
+    .subheading {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 15px;
+      margin: 4px 0;
+    }
+
+    /* Map */
+    #map {
+      width: 100%;
+      height: 350px;
+      border-radius: 15px;
+      margin-top: 10px;
+      border: 2px solid #67e6a4;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      background-color: #67e6a4;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -2px;
+      z-index: 1;
+    }
+    .timeline-item {
+      position: relative;
+      width: 45%;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards ease;
+      box-sizing: border-box;
+    }
+    .timeline-item.left { left: 0; }
+    .timeline-item.right { left: 55%; }
+
+    .timeline-circle {
+      position: absolute;
+      top: 15px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: #67e6a4;
+      border: 3px solid #fff;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .timeline-item.left .timeline-circle { right: -46px; }
+    .timeline-item.right .timeline-circle { left: -46px; }
+
+    .timeline-content {
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .timeline-header .time {
+      font-size: 12px;
+      color: #777;
+    }
+    .timeline-body p {
+      font-size: 14px;
+      margin: 4px 0;
+    }
+
+    .details {
+      display: inline-block;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      color: #333;
+    }
+    .details.expanded {
+      white-space: normal;
+      max-width: none;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Footer */
+    footer {
+      background-color: #2c6b3a;
+      color: #fff;
+      text-align: center;
+      padding: 12px 0;
+      margin-top: 30px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .timeline::after { left: 20px; }
+      .timeline-item { width: 100%; left: 0 !important; padding-left: 50px; }
+      .timeline-item .timeline-circle { display: none; }
+      .navbar { flex-direction: column; align-items: flex-start; padding: 12px 20px; }
+      .navbar-links { flex-direction: column; width: 100%; gap: 8px; margin-top: 8px; }
+      .nav-link { width: 100%; text-align: left; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 8px; }
+      #map { height: 250px; }
+      .timeline-content { padding: 10px 12px; }
+    }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h1>Batch: <%= product.batchId %></h1>
-  <p><strong>Herb Name:</strong> <%= product.herbName %></p>
-  <p><strong>Quantity:</strong> <%= product.quantity %></p>
 
-  <h2>Steps</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Step Type</th>
-        <th>Timestamp</th>
-        <th>Actor ID</th>
-        <th>Quality</th>
-        <th>Location</th>
-        <th>Action</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% steps.forEach(step => { %>
-        <tr>
-          <td><%= step.stepType %></td>
-          <td><%= new Date(Number(step.timestamp) * 1000).toLocaleString() %></td>
-          <td><%= step.actorId %></td>
-          <td><%= step.quality %></td>
-          <td><%= step.location %></td>
-          <td><%= step.action %></td>
-          <td><%= step.details %></td>
-        </tr>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-brand">HerbChain</div>
+    <!-- <div class="navbar-links">
+      <a href="/dashboard" class="nav-link"> Dashboard</a>
+      <a href="/addStep" class="nav-link">Add Step</a>
+    </div> -->
+  </div>
+
+  <!-- Top Section -->
+  <div class="section top-section">
+    <h1>Batch Overview</h1>
+    <p class="subheading">Details and basic info of the batch</p>
+    <p><strong>Batch ID:</strong> <%= product.batchId %></p>
+    <p><strong>Herb Name:</strong> <%= product.herbName %></p>
+    <p><strong>Quantity:</strong> <%= product.quantity %></p>
+  </div>
+
+  <!-- Map Section -->
+  <div class="section">
+    <h2>Map View</h2>
+    <p class="subheading">Locations associated with this batch</p>
+    <div id="map"></div>
+  </div>
+
+  <!-- Timeline Section -->
+  <div class="section">
+    <h2>Processing Timeline</h2>
+    <p class="subheading">Step-by-step actions for this batch</p>
+    <div class="timeline">
+      <% steps.forEach((step, index) => { %>
+        <div class="timeline-item <%= (index + 1) % 2 === 0 ? 'left' : 'right' %>" style="animation-delay: <%= index * 0.2 %>s">
+          <div class="timeline-circle"><%= index + 1 %></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>Step <%= index + 1 %>: <%= step.stepType %></h3>
+              <span class="time"><%= new Date(Number(step.timestamp) * 1000).toLocaleString() %></span>
+            </div>
+            <div class="timeline-body">
+              <p><strong>Actor:</strong> <%= step.actorId %></p>
+              <p><strong>Action:</strong> <%= step.action %></p>
+              <p><strong>Quality:</strong> <%= step.quality %></p>
+              <p><strong>Location:</strong> <%= step.location %></p>
+              <p><strong>Details:</strong> 
+                <span class="details"><%= step.details || 'N/A' %></span>
+              </p>
+            </div>
+          </div>
+        </div>
       <% }) %>
-    </tbody>
-  </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; <%= new Date().getFullYear() %> Batch Tracking System. All rights reserved.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const coords = <%- JSON.stringify(steps.map(s => s.location)) %>;
+    const actions = <%- JSON.stringify(steps.map(s => s.action)) %>;
+    const times = <%- JSON.stringify(steps.map(s => new Date(Number(s.timestamp) * 1000).toLocaleString())) %>;
+
+    const map = L.map('map').setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    const markers = [];
+    coords.forEach((loc, i) => {
+      if (loc) {
+        const [lat, lng] = loc.split(',').map(Number);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          const marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup(
+              `<b>Step:</b> ${i + 1}<br>
+               <b>Action:</b> ${actions[i]}<br>
+               <b>Time:</b> ${times[i]}<br>
+               <b>Coords:</b> ${lat}, ${lng}`
+            );
+          markers.push(marker);
+        }
+      }
+    });
+
+    if (markers.length) {
+      const group = new L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.2));
+    }
+
+    document.querySelectorAll('.details').forEach(el => {
+      el.addEventListener('click', () => {
+        el.classList.toggle('expanded');
+      });
+    });
+  </script>
 </body>
 </html>

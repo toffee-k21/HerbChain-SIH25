@@ -1,104 +1,297 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Record Step for <%= batchId %></title>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.5.0/dist/ethers.umd.min.js"></script>
-  <!-- WalletConnect v2 Ethereum Provider (UMD) -->
-  <script src="https://unpkg.com/@walletconnect/ethereum-provider/dist/umd/index.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Step - HerbChain</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #connectButton {
+            display: none;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Record Step for Batch: <%= batchId %></h1>
+    <h1>Record Step on HerbChain</h1>
+    <button id="connectButton">Connect with MetaMask</button>
+    <form id="recordStepForm" style="display: none;">
+        <label for="batchId">Batch ID:</label>
+        <input type="text" id="batchId" name="batchId" value="<%= batchId %>" readonly required>
 
-  <form id="stepForm">
-    <label>Step Type:</label>
-    <select id="stepType">
-      <option value="0">Collection</option>
-      <option value="1">Processing</option>
-      <option value="2">Testing</option>
-      <option value="3">Shipment</option>
-      <option value="4">Retail</option>
-    </select><br><br>
+        <label for="stepType">Step Type:</label>
+        <select id="stepType" name="stepType" required>
+            <option value="0">Collection</option>
+            <option value="1">Processing</option>
+            <option value="2">Testing</option>
+            <option value="3">Shipment</option>
+            <option value="4">Retail</option>
+        </select>
 
-    <label>Actor ID:</label>
-    <input type="text" id="actorId" required><br><br>
+        <label for="actorId">Actor ID:</label>
+        <input type="text" id="actorId" name="actorId" placeholder="e.g. collector123" required>
 
-    <label>Quality:</label>
-    <input type="text" id="quality"><br><br>
+        <label for="quality">Quality:</label>
+        <input type="text" id="quality" name="quality" placeholder="e.g. purity=95%;moisture=7%" required>
 
-    <label>Location:</label>
-    <input type="text" id="location"><br><br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" placeholder="e.g. GPS or facility code" required>
 
-    <label>Action:</label>
-    <input type="text" id="action" required><br><br>
+        <label for="action">Action:</label>
+        <input type="text" id="action" name="action" placeholder="e.g. processed, tested, shipped" required>
 
-    <label>Details:</label>
-    <input type="text" id="details"><br><br>
+        <label for="details">Details:</label>
+        <input type="text" id="details" name="details" placeholder="e.g. extra notes or IPFS hash">
 
-    <button type="submit">Record Step</button>
-  </form>
+        <button type="submit">Record Step</button>
+    </form>
+    <div id="status"></div>
 
-  <p id="status"></p>
+    <script>
+        const contractABI = [
+            {
+                "inputs": [
+                    {"internalType": "string", "name": "batchId", "type": "string"},
+                    {"internalType": "enum HerbChain.StepType", "name": "stepType", "type": "uint8"},
+                    {"internalType": "string", "name": "actorId", "type": "string"},
+                    {"internalType": "string", "name": "quality", "type": "string"},
+                    {"internalType": "string", "name": "location", "type": "string"},
+                    {"internalType": "string", "name": "action", "type": "string"},
+                    {"internalType": "string", "name": "details", "type": "string"}
+                ],
+                "name": "recordStep",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {"indexed": false, "internalType": "string", "name": "batchId", "type": "string"},
+                    {"indexed": false, "internalType": "enum HerbChain.StepType", "name": "stepType", "type": "uint8"},
+                    {"indexed": false, "internalType": "string", "name": "action", "type": "string"}
+                ],
+                "name": "StepRecorded",
+                "type": "event"
+            }
+        ];
+        const contractAddress = "<%= contract_address %>";
 
-  <script>
-    const batchId = "<%= batchId %>";
-    const contractAddress = "0x275a703827ee97750b4dF88388880878a2cc5cdc"; // replace with your deployed contract
-    const abi = [
-      "function recordStep(string batchId,uint8 stepType,string actorId,string quality,string location,string action,string details) public"
-    ];
+        let provider, signer, contract;
 
-    const statusEl = document.getElementById("status");
-    const form = document.getElementById("stepForm");
+        // --- Status updater ---
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById("status");
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+        }
 
-    let wcProvider = null;
+        // --- Detect if mobile ---
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
 
-    async function connectWallet() {
-      // ✅ Desktop MetaMask
-      if (window.ethereum) {
-        await ethereum.request({ method: "eth_requestAccounts" });
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        return new ethers.Contract(contractAddress, abi, signer);
-      }
+        // --- Ensure MetaMask is on Sepolia ---
+        async function switchToSepolia() {
+            try {
+                await window.ethereum.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [{ chainId: "0xaa36a7" }], // Sepolia chainId (11155111)
+                });
+            } catch (err) {
+                if (err.code === 4902) {
+                    await window.ethereum.request({
+                        method: "wallet_addEthereumChain",
+                        params: [{
+                            chainId: "0xaa36a7",
+                            chainName: "Sepolia Test Network",
+                            nativeCurrency: { name: "Sepolia ETH", symbol: "ETH", decimals: 18 },
+                            rpcUrls: ["https://rpc.sepolia.org"],
+                            blockExplorerUrls: ["https://sepolia.etherscan.io"],
+                        }],
+                    });
+                } else {
+                    updateStatus("Error switching network: " + err.message, "error");
+                    throw err;
+                }
+            }
+        }
 
-      // ✅ Mobile / WalletConnect v2
-      if (!wcProvider) {
-        wcProvider = await window.EthereumProvider.init({
-          projectId: "29a699b060ba734c4986b31205e83da5", // your WalletConnect projectId
-          chains: [11155111], // Sepolia
-          showQrModal: true,
+        // --- Connect wallet ---
+        async function connectWallet() {
+            if (!window.ethereum) {
+                if (isMobile()) {
+                    // Deep link to MetaMask mobile app
+                    const dappUrl = window.location.href;
+                    const metamaskDeepLink = `https://metamask.app.link/dapp/${dappUrl.replace(/^https?:\/\//, '')}`;
+                    updateStatus("Redirecting to MetaMask app...", "");
+                    window.location.href = metamaskDeepLink;
+                } else {
+                    updateStatus("MetaMask not detected. Please install MetaMask extension.", "error");
+                }
+                return;
+            }
+
+            try {
+                // Request accounts
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                console.log("Connected account:", accounts[0]);
+
+                // Ensure Sepolia
+                await switchToSepolia();
+
+                // Set up ethers
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                updateStatus("Connected to MetaMask (Sepolia)", "success");
+
+                // Show form after connection
+                document.getElementById("recordStepForm").style.display = "block";
+                document.getElementById("connectButton").style.display = "none";
+            } catch (error) {
+                updateStatus("Error connecting to MetaMask: " + error.message, "error");
+            }
+        }
+
+        // On load: Check if already connected or show connect button
+        window.addEventListener("load", async function() {
+            if (window.ethereum) {
+                await connectWallet();
+            } else {
+                document.getElementById("connectButton").style.display = "block";
+                if (isMobile()) {
+                    updateStatus("Click 'Connect with MetaMask' to open in the MetaMask app.", "");
+                } else {
+                    updateStatus("Please install MetaMask extension and refresh.", "error");
+                }
+            }
         });
-      }
 
-      await wcProvider.enable();
-      const ethersProvider = new ethers.BrowserProvider(wcProvider);
-      const signer = await ethersProvider.getSigner();
-      return new ethers.Contract(contractAddress, abi, signer);
-    }
+        // Connect button handler
+        document.getElementById("connectButton").addEventListener("click", connectWallet);
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        statusEl.innerText = "Connecting wallet...";
-        const contract = await connectWallet();
+        // Form submit handler
+        document.getElementById("recordStepForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
 
-        const tx = await contract.recordStep(
-          batchId,
-          parseInt(document.getElementById("stepType").value),
-          document.getElementById("actorId").value,
-          document.getElementById("quality").value,
-          document.getElementById("location").value,
-          document.getElementById("action").value,
-          document.getElementById("details").value
-        );
+            if (!contract) {
+                updateStatus("Please connect wallet first.", "error");
+                return;
+            }
 
-        statusEl.innerText = "Transaction sent: " + tx.hash;
-        await tx.wait();
-        statusEl.innerText = "✅ Transaction confirmed: " + tx.hash;
-      } catch (err) {
-        console.error(err);
-        statusEl.innerText = "❌ Error: " + (err.message || err);
-      }
-    });
-  </script>
+            const batchId = document.getElementById("batchId").value;
+            const stepType = parseInt(document.getElementById("stepType").value);
+            const actorId = document.getElementById("actorId").value;
+            const quality = document.getElementById("quality").value;
+            const location = document.getElementById("location").value;
+            const action = document.getElementById("action").value;
+            const details = document.getElementById("details").value || "";
+
+            try {
+                // Validate inputs
+                if (!batchId || !actorId || !quality || !location || !action) {
+                    updateStatus("All required fields must be filled.", "error");
+                    return;
+                }
+
+                // Estimate gas
+                let gasLimit;
+                try {
+                    gasLimit = await contract.estimateGas.recordStep(
+                        batchId, stepType, actorId, quality, location, action, details
+                    );
+                    gasLimit = gasLimit.mul(120).div(100); // Add 20% buffer
+                } catch (error) {
+                    console.warn("Gas estimation failed, using default:", error.message);
+                    gasLimit = ethers.BigNumber.from("300000"); // Default gas limit
+                }
+
+                updateStatus("Sending transaction...", "");
+                const tx = await contract.recordStep(
+                    batchId, stepType, actorId, quality, location, action, details,
+                    { gasLimit }
+                );
+                await tx.wait();
+                updateStatus(`Step recorded successfully! Transaction hash: ${tx.hash}`, "success");
+            } catch (error) {
+                let errorMessage = error.message || "Unknown error";
+                if (error.reason && error.reason.includes("Batch does not exist")) {
+                    errorMessage = "Batch ID does not exist. Please create the batch first using recordCollection.";
+                } else if (error.code === 4001) {
+                    errorMessage = "Transaction rejected by user.";
+                } else if (error.code === -32603) {
+                    errorMessage = "Transaction failed: Possible gas or network issue.";
+                }
+                updateStatus(`Error recording step: ${errorMessage}`, "error");
+            }
+        });
+
+        // Handle account/network changes
+        if (window.ethereum) {
+            window.ethereum.on("accountsChanged", () => {
+                updateStatus("Account changed. Reconnecting...", "");
+                connectWallet();
+            });
+            window.ethereum.on("chainChanged", () => {
+                updateStatus("Network changed. Ensuring Sepolia...", "");
+                connectWallet();
+            });
+        }
+    </script>
 </body>
 </html>

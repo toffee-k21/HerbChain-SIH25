@@ -24,7 +24,7 @@ export default function QRCodePage() {
       <h2 className="text-2xl font-bold mb-4">Collection Event QR Code</h2>
       <div className="flex justify-center mb-4">
         <QRCodeCanvas
-          value={`http://localhost:5000/product/${batchId}`}
+          value={`http://localhost:5000/dashboard/${batchId}`}
           size={256}
           level="H"
           includeMargin={true}
@@ -48,7 +48,7 @@ export default function QRCodePage() {
         </p>
         <button
           onClick={downloadQRCode}
-          className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+          className="w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
         >
           Download QR Code
         </button>
