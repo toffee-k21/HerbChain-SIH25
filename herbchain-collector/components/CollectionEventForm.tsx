@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { uploadFileToIPFS } from "@/utils/uploadToIPFS";
-import ABI from "../utils/ABI.json";
-import Address from "../utils/Address.json";
 import { v4 as uuidv4 } from "uuid";
-import { getHerbChainContract, recordCollection } from "@/lib/wallet";
+import { recordCollection } from "@/lib/wallet";
 import { motion } from "framer-motion";
 import {
   Camera,
@@ -144,22 +141,24 @@ export default function CollectionEventForm() {
       await uploadFile();
     }
 
-    console.log("Form Data:", formData);
     const batchId = uuidv4();
     const { quantity, actorId, location, details, quality, herbName } =
       formData;
-    recordCollection(
-      batchId,
-      herbName,
-      Number(quantity),
-      actorId,
-      quality,
-      location,
-      details
-    );
-
-    // Show success message
-    setMessage(t("collection.success"));
+      console.log("batchiD",batchId);
+      recordCollection(
+        batchId,
+        herbName,
+        Number(quantity),
+        actorId,
+        quality,
+        location,
+        details
+      );
+      
+      
+      // Show success message
+      setMessage(t("collection.success"));
+      router.push(`/qr-code/${batchId}`);
   };
 
   function getCookie(name:string) { const value = `; ${document.cookie}`; const parts = value.split(`; ${name}=`); if (parts.length === 2) return parts.pop()?.split(';').shift(); }
