@@ -145,7 +145,7 @@ export default function CollectionEventForm() {
     const { quantity, actorId, location, details, quality, herbName } =
       formData;
       console.log("batchiD",batchId);
-      recordCollection(
+      await recordCollection(
         batchId,
         herbName,
         Number(quantity),
