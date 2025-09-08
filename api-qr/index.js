@@ -14,6 +14,7 @@ const abi = [
 ];
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+const contract_address = process.env.CONTRACT_ADDRESS;
 const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, abi, provider);
 
 // EJS setup
@@ -22,7 +23,7 @@ app.set("views", "./views");
 
 app.get("/record-step/:batchId", (req, res) => {
     const { batchId } = req.params;
-    res.render("recordStep", { batchId });
+    res.render("recordStep", { batchId, contract_address });
   });
 
   app.get("/dashboard/:batchId", (req, res) => {
