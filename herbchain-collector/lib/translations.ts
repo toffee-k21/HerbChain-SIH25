@@ -196,17 +196,21 @@ export const translations = {
     'onboarding.language.english': 'English',
     'onboarding.language.hindi': 'हिंदी',
     
-    'onboarding.wildcollectors.title': 'Wild Collectors and Farmers',
-    'onboarding.wildcollectors.text': 'Welcome wildcollectors and farmers to HerbalChainCollector',
-    
+    'onboarding.greeting.title': 'Welcome to HerbalChainCollector',
+    'onboarding.greeting.text': 'From collectors and farmers to lab technicians, stakeholders, and consumers — join us in building a trusted journey of Ayurvedic herbs.',
+
+    'onboarding.wildcollectors.title': 'Collectors & Farmers',
+    'onboarding.wildcollectors.text': 'Easily record and trace your harvested herbs on the blockchain, ensuring their origin and purity are verifiable.',
+
     'onboarding.labtechnicians.title': 'Lab Technicians',
-    'onboarding.labtechnicians.text': 'Welcome lab technicians to HerbalChainCollector',
-    
-    'onboarding.stakeholders.title': 'StakeHolders',
-    'onboarding.stakeholders.text': 'Welcome StakeHolders to HerbalChainCollector',
-    
+    'onboarding.labtechnicians.text': 'Verify and log quality checks of herbs securely on-chain, boosting confidence in every batch tested.',
+
+    'onboarding.stakeholders.title': 'Stakeholders',
+    'onboarding.stakeholders.text': 'Gain transparency into the entire Ayurvedic herb supply chain, enhancing accountability and trust.',
+
     'onboarding.consumers.title': 'Consumers',
-    'onboarding.consumers.text': 'Welcome Consumers to HerbalChainCollector',
+    'onboarding.consumers.text': 'Trace each product back to its source, ensuring the Ayurvedic herbs you use are authentic, safe, and trustworthy.',
+
     
     'onboarding.role.title': 'Select your Role',
     'onboarding.role.text': 'Choose your role to get started',
