@@ -196,21 +196,17 @@ export const translations = {
     'onboarding.language.english': 'English',
     'onboarding.language.hindi': 'हिंदी',
     
-    'onboarding.greeting.title': 'Welcome to HerbalChainCollector',
-    'onboarding.greeting.text': 'From collectors and farmers to lab technicians, stakeholders, and consumers — join us in building a trusted journey of Ayurvedic herbs.',
-
-    'onboarding.wildcollectors.title': 'Collectors & Farmers',
-    'onboarding.wildcollectors.text': 'Easily record and trace your harvested herbs on the blockchain, ensuring their origin and purity are verifiable.',
-
-    'onboarding.labtechnicians.title': 'Lab Technicians',
-    'onboarding.labtechnicians.text': 'Verify and log quality checks of herbs securely on-chain, boosting confidence in every batch tested.',
-
-    'onboarding.stakeholders.title': 'Stakeholders',
-    'onboarding.stakeholders.text': 'Gain transparency into the entire Ayurvedic herb supply chain, enhancing accountability and trust.',
-
+    'onboarding.wildcollectors.title': 'Welcome to Herbchain',
+    'onboarding.wildcollectors.text': 'From collectors and farmers to lab technicians, stakeholders, and consumers — join us in building a trusted journey of Ayurvedic herbs',
+    
+    'onboarding.labtechnicians.title': 'Collectors & Farmers',
+    'onboarding.labtechnicians.text': 'Easily record and trace your harvested herbs on the blockchain, ensuring their origin and purity are verifiable',
+    
+    'onboarding.stakeholders.title': 'Lab Technicians',
+    'onboarding.stakeholders.text': 'Verify and log quality checks of herbs securely on-chain, boosting confidence in every batch tested',
+    
     'onboarding.consumers.title': 'Consumers',
-    'onboarding.consumers.text': 'Trace each product back to its source, ensuring the Ayurvedic herbs you use are authentic, safe, and trustworthy.',
-
+    'onboarding.consumers.text': 'Trace each product back to its source, ensuring the Ayurvedic herbs you use are authentic, safe, and trustworthy',
     
     'onboarding.role.title': 'Select your Role',
     'onboarding.role.text': 'Choose your role to get started',
