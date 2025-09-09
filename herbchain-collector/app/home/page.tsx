@@ -51,6 +51,7 @@ const HomePage = () => {
         <div className="flex items-center justify-between p-2 pt-4">
           {/* Left: User Profile & App Name */}
           <div className="flex items-center gap-3">
+            <a href="/kyc">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -58,8 +59,9 @@ const HomePage = () => {
             >
               <User className="w-4 h-4 text-primary-600" />
             </motion.div>
+            </a>
             <div>
-              <h1 className="text-sm font-semibold text-gray-800">HerbChain</h1>
+              <h1 className="text-sm font-semibold text-gray-800"><a href="/">HerbChain</a></h1>
             </div>
           </div>
 
@@ -205,12 +207,14 @@ const HomePage = () => {
           </motion.div>  
 
           {/* Near Hotspots */}
+         
           <motion.div
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigateToPage("/collectorDashboard")}
+            onClick={() => navigateToPage("http://65.0.238.136:5000/dashboard/27c6d846-068d-497f-85d2-99e904edd99d")}
             
           >
+            
             <div  className="flex flex-col items-center gap-2">
                 <div
                     style={{
@@ -225,7 +229,7 @@ const HomePage = () => {
                   {t('dashboard.nearHotspots')}
                 </p>
             </div>
-          </motion.div>  
+          </motion.div> 
 
            {/* Procurement */}
           <motion.div
@@ -254,7 +258,7 @@ const HomePage = () => {
           <motion.div
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigateToPage("/collectorDashboard")}
+            onClick={() => navigateToPage("http://65.0.238.136:5000/dashboard/27c6d846-068d-497f-85d2-99e904edd99d")}
             
           >
             <div  className="flex flex-col items-center gap-2">
