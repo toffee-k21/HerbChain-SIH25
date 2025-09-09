@@ -24,7 +24,7 @@ export default function QRCodePage() {
       <h2 className="text-2xl font-bold mb-4">Collection Event QR Code</h2>
       <div className="flex justify-center mb-4">
         <QRCodeCanvas
-          value={`http://65.0.238.136:5000/record-step/${batchId}`}
+          value={`http://65.0.238.136:5000/dashboard/${batchId}`}
           size={256}
           level="H"
           includeMargin={true}
