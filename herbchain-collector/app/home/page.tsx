@@ -21,6 +21,7 @@ import {
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import Image from "next/image";
+import Link from "next/link";
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ const HomePage = () => {
         <div className="flex items-center justify-between p-2 pt-4">
           {/* Left: User Profile & App Name */}
           <div className="flex items-center gap-3">
-            <a href="/kyc">
+            <Link href="/kyc">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -59,9 +60,9 @@ const HomePage = () => {
             >
               <User className="w-4 h-4 text-primary-600" />
             </motion.div>
-            </a>
+            </Link>
             <div>
-              <h1 className="text-sm font-semibold text-gray-800"><a href="/">HerbChain</a></h1>
+              <h1 className="text-sm font-semibold text-gray-800"><Link href="/">HerbChain</Link></h1>
             </div>
           </div>
 
