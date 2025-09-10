@@ -9,8 +9,6 @@ This project was built to ensure transparency and authenticity across the herbal
 
 Here’s the high-level sketch of the HerbChain workflow:
 
-![HerbChain Architecture](https://github.com/user-attachments/assets/703be284-ffe6-479b-a8fe-df76b7c2359f)
-
 <img width="9831" height="4147" alt="image" src="https://github.com/user-attachments/assets/703be284-ffe6-479b-a8fe-df76b7c2359f" />
 
 🔗 [View Interactive Sketch on Excalidraw](https://excalidraw.com/#json=t2mUkPdQQLmLAciq9zTPW,9mkyoxOE4car5a9LiDXFOA)
@@ -33,3 +31,4 @@ Here’s the high-level sketch of the HerbChain workflow:
 git clone https://github.com/your-username/herbchain.git
 cd herbchain
 ```
+
