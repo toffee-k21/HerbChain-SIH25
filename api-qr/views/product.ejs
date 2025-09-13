@@ -257,6 +257,16 @@
               <p><strong>Location:</strong> <%= step.location %></p>
               <p><strong>Details:</strong> 
                 <span class="details"><%= step.details || 'N/A' %></span>
+                <% if (step.details && step.details.match(/^[A-Za-z0-9]{46}$/)) { %>
+                  <div class="certification">
+                    <p><strong>Certificate:</strong></p>
+                    <img 
+                      src="https://gateway.pinata.cloud/ipfs/<%= step.details %>" 
+                      alt="Certificate Image" 
+                      style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px;" 
+                    />
+                  </div>
+                <% } %>
               </p>
             </div>
           </div>
