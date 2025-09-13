@@ -10,8 +10,10 @@ export async function POST(request: NextRequest) {
     // Parse the incoming request
     const formData = await request.formData();
     const file = formData.get('image') as File;
-    const latitude = formData.get('latitude') as string;
-    const longitude = formData.get('longitude') as string;
+    console.log(formData);
+    const location = formData.get('location') as string;
+    const latitude = location.split(',')[0];
+    const longitude = location.split(',')[1];
     const timestamp = formData.get('timestamp') as string;
 
     if (!file) {
@@ -139,7 +141,7 @@ Return ONLY valid JSON without any additional text.`;
       credibility_score: credibilityScore
     };
     
-    console.log('API Response Data:', responseData);
+    // console.log('API Response Data:', responseData);
     
     return NextResponse.json(responseData);
 

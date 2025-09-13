@@ -72,12 +72,14 @@ export default function CollectionEventForm() {
     setHealthError("");
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
+      const fData = new FormData();
+      fData.append("image", file);
+      fData.append("location",formData.location);
+      fData.append("timestamp",formData.timestamp);
 
       const response = await fetch("/api/analyze-plant", {
         method: "POST",
-        body: formData,
+        body: fData,
       });
 
       if (!response.ok) {
@@ -85,6 +87,7 @@ export default function CollectionEventForm() {
       }
 
       const result = await response.json();
+      console.log(result);
       setAnalysisResult(result.analysis); // Extract the analysis object
       
       // Auto-populate the quality assessment field
@@ -629,6 +632,72 @@ export default function CollectionEventForm() {
                       <p><span className="font-medium">Harvest Timing:</span> {analysisResult.recommendations.harvest_timing}</p>
                     )}
                   </div>
+                </div>
+              )}
+
+                            {/* Geographical Suitability */}
+                            {analysisResult.geographical_suitability && (
+                <div className="p-4 bg-blue-50 rounded-xl">
+                  <h4 className="font-semibold">🌍 Geographical Suitability</h4>
+                  <p>{analysisResult.geographical_suitability.region_analysis}</p>
+                  <p>
+                    <span className="font-medium">Suitability Score:</span>{" "}
+                    {analysisResult.geographical_suitability.suitability_score}/10
+                  </p>
+                  <p>
+                    <span className="font-medium">Optimal Conditions:</span>{" "}
+                    {analysisResult.geographical_suitability.optimal_growing_conditions.join(", ")}
+                  </p>
+                  <p>
+                    <span className="font-medium">Challenges:</span>{" "}
+                    {analysisResult.geographical_suitability.potential_challenges.join(", ")}
+                  </p>
+                </div>
+              )}
+
+              {/* Validation Metrics */}
+              {analysisResult.validation_metrics && (
+                <div className="p-4 bg-indigo-50 rounded-xl">
+                  <h4 className="font-semibold">📊 Validation Metrics</h4>
+                  <p>
+                    Location Consistency:{" "}
+                    {analysisResult.validation_metrics.location_consistency
+                      ? "✅ Yes"
+                      : "❌ No"}
+                  </p>
+                  <p>
+                    Seasonal Appropriateness:{" "}
+                    {analysisResult.validation_metrics.seasonal_appropriateness
+                      ? "✅ Yes"
+                      : "❌ No"}
+                  </p>
+                  <p>
+                    Confidence Score: {analysisResult.validation_metrics.confidence_score}%
+                  </p>
+                </div>
+              )}
+
+              {/* Credibility Score */}
+              {analysisResult.credibility_score && (
+                <div className="p-4 bg-yellow-50 rounded-xl">
+                  <h4 className="font-semibold">⭐ Credibility Score</h4>
+                  <p>Overall: {analysisResult.credibility_score.overall_score}%</p>
+                  <p>Risk Level: {analysisResult.credibility_score.risk_level}</p>
+                  {analysisResult.credibility_score.warning_flags?.length > 0 && (
+                    <p>
+                      <span className="font-medium">Warnings:</span>{" "}
+                      {analysisResult.credibility_score.warning_flags.join(", ")}
+                    </p>
+                  )}
+                  {analysisResult.credibility_score.recommendations?.length > 0 && (
+                    <ul className="list-disc ml-5">
+                      {analysisResult.credibility_score.recommendations.map(
+                        (rec: string, i: number) => (
+                          <li key={i}>{rec}</li>
+                        )
+                      )}
+                    </ul>
+                  )}
                 </div>
               )}
 
