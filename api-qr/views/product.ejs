@@ -147,6 +147,7 @@
       background: #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       position: relative;
+      overflow: hidden;
     }
     .timeline-header {
       display: flex;
@@ -247,7 +248,7 @@
           <div class="timeline-circle"><%= index + 1 %></div>
           <div class="timeline-content">
             <div class="timeline-header">
-              <h3>Step <%= index + 1 %>: <%= step.stepType %></h3>
+              <h3>Step <%= index + 1 %></h3>
               <span class="time"><%= new Date(Number(step.timestamp) * 1000).toLocaleString() %></span>
             </div>
             <div class="timeline-body">
