@@ -22,6 +22,7 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 
 app.get("/record-step/:batchId", (req, res) => {
+   
     const { batchId } = req.params;
     res.render("recordStep", { batchId, contract_address });
   });

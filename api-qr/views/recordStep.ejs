@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Step - HerbChain</title>
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -93,8 +94,14 @@
         <label for="action">Action:</label>
         <input type="text" id="action" name="action" placeholder="e.g. processed, tested, shipped" required>
 
+        <label for="certificate">Upload Certificate:</label>
+        <input type="file" id="certificate" accept="image/*">
+        <button type="button" id="uploadButton">Upload Certificate</button>
+
+
         <label for="details">Details:</label>
         <input type="text" id="details" name="details" placeholder="e.g. extra notes or IPFS hash">
+
 
         <button type="submit">Record Step</button>
     </form>
@@ -292,6 +299,60 @@
                 connectWallet();
             });
         }
+        const PINATA_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5MzZiMGUwZC1mYjNhLTQzMmItYjJlMC04N2JjYmZjZDY5Y2UiLCJlbWFpbCI6InRhdWZpcTIwMDQuMjFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjBkYjdmMjhkYjg3MjYzMmU0YTAwIiwic2NvcGVkS2V5U2VjcmV0IjoiODU2MDkwYWI5NWM3NDUyNzZhODQ4NzZjNWM5ZmE0YjIxYjFhMGNmNmM5ZmI5YTRiOGIxOGU1MzIzOTM2ZThkMiIsImV4cCI6MTc4OTI5MzA4Nn0.OXfqI1mYt0eC4kkVf2mrgDc2SQU4cNEsyjZWqOJ_4Kc"; // Replace with your JWT
+
+// Upload file to Pinata
+async function uploadFileToIPFS(file) {
+  const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+  const formData = new FormData();
+  formData.append("file", file, file.name);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${PINATA_JWT}` },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`;
+  } catch (err) {
+    console.error("IPFS Upload Error:", err);
+    return null;
+  }
+}
+
+// Status message
+function updateStatus(message, type) {
+  const statusDiv = document.getElementById("status");
+  statusDiv.textContent = message;
+  statusDiv.className = "status " + (type || "");
+}
+
+// Upload handler
+document.getElementById("uploadButton").addEventListener("click", async () => {
+  const fileInput = document.getElementById("certificate");
+  if (!fileInput.files.length) {
+    updateStatus("Please select a certificate image first.", "error");
+    return;
+  }
+
+  updateStatus("Uploading certificate to IPFS...", "");
+  const file = fileInput.files[0];
+  const ipfsUrl = await uploadFileToIPFS(file);
+
+  if (ipfsUrl) {
+    const cid = ipfsUrl.split("/ipfs/").pop(); // Extract CID only
+    document.getElementById("details").value = cid; // Autofill details field
+    updateStatus("Certificate uploaded! CID added to details.", "success");
+  } else {
+    updateStatus("Upload failed.", "error");
+  }
+});
     </script>
 </body>
 </html>
