@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
+import { calculateCredibilityScore } from '@/utils/credibilityScoring';
 
 // Initialize Gemini AI with server-side API key (hidden from frontend)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'AIzaSyAno_0QOSy_4XaooY1bRydhd0IQMMtCzI8');
@@ -9,6 +10,9 @@ export async function POST(request: NextRequest) {
     // Parse the incoming request
     const formData = await request.formData();
     const file = formData.get('image') as File;
+    const latitude = formData.get('latitude') as string;
+    const longitude = formData.get('longitude') as string;
+    const timestamp = formData.get('timestamp') as string;
 
     if (!file) {
       return NextResponse.json(
@@ -32,42 +36,57 @@ export async function POST(request: NextRequest) {
     // Get the model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Create detailed prompt for plant analysis
-    const prompt = `Analyze this plant image and provide a comprehensive assessment in JSON format with the following structure:
-    {
-      "plant_identification": {
-        "common_name": "Common name of the plant",
-        "scientific_name": "Scientific/botanical name",
-        "family": "Plant family",
-        "confidence": "Confidence level (High/Medium/Low)"
-      },
-      "health_status": {
-        "overall_health": "Overall health status",
-        "health_score": "Score from 0-10",
-        "visible_symptoms": ["List of any visible symptoms or issues"]
-      },
-      "disease_detection": {
-        "diseases_found": ["List any diseases detected"],
-        "pest_issues": ["List any pest problems visible"],
-        "deficiency_signs": ["Nutritional deficiency signs if any"],
-        "severity": "Severity level (None/Mild/Moderate/Severe)"
-      },
-      "quality_assessment": {
-        "quality_rating": "Rating from 0-10",
-        "marketability": "Market quality assessment",
-        "harvest_readiness": "Ready for harvest? (Yes/No/Partial)",
-        "storage_potential": "Storage potential assessment"
-      },
-      "recommendations": {
-        "immediate_actions": ["Immediate care recommendations"],
-        "treatment_suggestions": ["Treatment or intervention suggestions"],
-        "best_practices": ["General care recommendations"],
-        "harvest_timing": "Optimal harvest timing advice"
-      },
-      "additional_notes": "Any other relevant observations"
-    }
-    
-    Please analyze the image carefully and provide accurate, detailed information for Ayurvedic herb cultivation and quality assessment. Return ONLY valid JSON without any markdown formatting.`;
+    // 🌿 UPDATED PROMPT - Now includes location awareness
+    const prompt = ` 
+Analyze this plant image with geographical intelligence. You will receive location coordinates and should use your knowledge of agricultural zones, climate patterns, and regional suitability to provide a comprehensive assessment. 
+
+USER PROVIDED GEO-DATA: 
+- Coordinates: Latitude ${latitude}, Longitude ${longitude} 
+- Collection Time: ${timestamp} 
+
+Provide analysis in this exact JSON format: 
+{ 
+  "plant_identification": { 
+    "common_name": "Common name", 
+    "scientific_name": "Scientific name", 
+    "family": "Plant family", 
+    "confidence": "High/Medium/Low" 
+  }, 
+  "geographical_suitability": { 
+    "region_analysis": "Brief analysis of this region's agricultural characteristics", 
+    "suitability_score": 0-10, 
+    "optimal_growing_conditions": ["Condition 1", "Condition 2"], 
+    "potential_challenges": ["Challenge 1", "Challenge 2"] 
+  }, 
+  "health_status": { 
+    "overall_health": "Health status", 
+    "health_score": 0-10, 
+    "visible_symptoms": ["Symptom 1", "Symptom 2"] 
+  }, 
+  "quality_assessment": { 
+    "quality_rating": 0-10, 
+    "harvest_readiness": "Yes/No/Partial", 
+    "marketability": "Assessment text" 
+  }, 
+  "disease_detection": { 
+    "diseases_found": ["Disease 1", "Disease 2"], 
+    "severity": "None/Mild/Moderate/Severe", 
+    "pest_issues": ["Pest 1", "Pest 2"] 
+  }, 
+  "recommendations": { 
+    "immediate_actions": ["Action 1", "Action 2"], 
+    "best_practices": ["Practice 1", "Practice 2"], 
+    "harvest_timing": "Recommendation text" 
+  }, 
+  "validation_metrics": { 
+    "location_consistency": true/false, 
+    "seasonal_appropriateness": true/false, 
+    "confidence_score": 0-100 
+  } 
+} 
+
+
+Return ONLY valid JSON without any additional text.`;
 
     // Generate analysis
     const result = await model.generateContent([prompt, imagePart]);
@@ -77,7 +96,6 @@ export async function POST(request: NextRequest) {
     // Try to parse JSON response
     let parsedResult;
     try {
-      // Extract JSON from response (sometimes AI includes markdown formatting)
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         parsedResult = JSON.parse(jsonMatch[0]);
@@ -85,22 +103,50 @@ export async function POST(request: NextRequest) {
         parsedResult = { raw_response: text };
       }
     } catch (parseError) {
-      parsedResult = { 
-        raw_response: text, 
-        parse_error: 'Could not parse as JSON',
-        error_details: parseError
+      parsedResult = {
+        raw_response: text,
+        parse_error: 'Could not parse as JSON'
       };
     }
 
-    return NextResponse.json({
+    // Calculate credibility score
+    const credibilityScore = calculateCredibilityScore(
+      {
+        common_name: parsedResult.plant_identification?.common_name || '',
+        scientific_name: parsedResult.plant_identification?.scientific_name || '',
+        confidence_score: parsedResult.validation_metrics?.confidence_score || 0
+      },
+      {
+        latitude,
+        longitude,
+        timestamp
+      },
+      {
+        health_score: parsedResult.health_status?.health_score || 0,
+        quality_rating: parsedResult.quality_assessment?.quality_rating || 0,
+        diseases_detected: parsedResult.health_status?.visible_symptoms || []
+      }
+    );
+
+    const responseData = {
       success: true,
-      analysis: parsedResult
-    });
+      analysis: parsedResult,
+      location_data: {
+        latitude,
+        longitude,
+        timestamp
+      },
+      credibility_score: credibilityScore
+    };
+    
+    console.log('API Response Data:', responseData);
+    
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error('Gemini API Error:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Failed to analyze image',
         details: error instanceof Error ? error.message : 'Unknown error'
@@ -112,9 +158,50 @@ export async function POST(request: NextRequest) {
 
 // Handle GET requests (for testing)
 export async function GET() {
-  return NextResponse.json({
-    message: 'Plant Analysis API is running',
-    endpoint: 'POST /api/analyze-plant',
-    usage: 'Send plant images for AI analysis'
-  });
+  // Create a mock response with credibility score for testing
+  const mockResponse = {
+    success: true,
+    analysis: {
+      plant_identification: {
+        common_name: 'Test Plant',
+        scientific_name: 'Testus Plantus',
+        confidence: 'High'
+      },
+      health_status: {
+        overall_health: 'Good',
+        health_score: 8,
+        visible_symptoms: []
+      },
+      quality_assessment: {
+        quality_rating: 7,
+        harvest_readiness: 'Yes',
+        marketability: 'Good market value'
+      },
+      disease_detection: {
+        diseases_found: [],
+        severity: 'None',
+        pest_issues: []
+      },
+      recommendations: {
+        immediate_actions: ['Water regularly'],
+        best_practices: ['Maintain soil pH'],
+        harvest_timing: 'Ready for harvest'
+      }
+    },
+    credibility_score: {
+      overall_score: 85,
+      risk_level: 'LOW',
+      breakdown: {
+        geographical: { score: 35, reasoning: 'Plant is native to region' },
+        seasonal: { score: 25, reasoning: 'Appropriate season for growth' },
+        ai_analysis: { score: 25, reasoning: 'High confidence in identification' }
+      },
+      recommendations: ['Verify with local expert'],
+      warning_flags: []
+    }
+  };
+
+  console.log('Returning mock data with credibility_score:', mockResponse.credibility_score);
+  
+  return NextResponse.json(mockResponse);
 }

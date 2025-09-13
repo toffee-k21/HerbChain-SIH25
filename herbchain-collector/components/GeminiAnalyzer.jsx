@@ -2,9 +2,100 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
+// Credibility Score Component
+function CredibilityScoreSection({ credibilityScore }) {
+  if (!credibilityScore) return null;
+  
+  console.log('CredibilityScoreSection received:', credibilityScore);
+  
+  return (
+    <div style={{
+      backgroundColor: '#1e3a8a',
+      padding: '15px',
+      borderRadius: '8px',
+      border: '1px solid #3b82f6',
+      marginTop: '15px'
+    }}>
+      <h4 style={{ color: '#93c5fd', fontSize: '16px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+        🔐 Credibility Score
+      </h4>
+      <div style={{ fontSize: '14px', lineHeight: '1.5', color: '#d1d5db' }}>
+        {/* Score display with fallback to overall_score if score is not available */}
+        {(typeof credibilityScore.score === 'number' || typeof credibilityScore.overall_score === 'number') && (
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Score:</strong>
+            <span style={{ 
+              backgroundColor: 
+                (credibilityScore.score >= 7 || credibilityScore.overall_score >= 70) ? '#14532d' : 
+                (credibilityScore.score >= 4 || credibilityScore.overall_score >= 40) ? '#713f12' : 
+                '#7f1d1d',
+              color: '#d1d5db',
+              padding: '2px 6px', 
+              borderRadius: '4px', 
+              fontSize: '12px',
+              fontWeight: 'bold',
+              marginLeft: '6px'
+            }}>
+              {typeof credibilityScore.score === 'number' ? 
+                `${credibilityScore.score}/10` : 
+                `${Math.round(credibilityScore.overall_score / 10)}/10`}
+            </span>
+          </p>
+        )}
+        {/* Risk level display */}
+        {credibilityScore.risk_level && (
+          <p style={{ margin: '4px 0', color: '#d1d5db' }}><strong>Risk Level:</strong> 
+            <span style={{ 
+              backgroundColor: 
+                (credibilityScore.risk_level.toLowerCase ? credibilityScore.risk_level.toLowerCase() : String(credibilityScore.risk_level).toLowerCase()) === 'low' ? '#14532d' : 
+                (credibilityScore.risk_level.toLowerCase ? credibilityScore.risk_level.toLowerCase() : String(credibilityScore.risk_level).toLowerCase()) === 'medium' ? '#713f12' : 
+                '#7f1d1d',
+              color: '#d1d5db',
+              padding: '2px 6px', 
+              borderRadius: '4px', 
+              fontSize: '12px',
+              marginLeft: '6px'
+            }}>
+              {credibilityScore.risk_level}
+            </span>
+          </p>
+        )}
+        {/* Display warnings or warning_flags */}
+        {((credibilityScore.warnings && credibilityScore.warnings.length > 0) || 
+          (credibilityScore.warning_flags && credibilityScore.warning_flags.length > 0)) && (
+          <div style={{ marginTop: '8px', color: '#d1d5db' }}>
+            <strong>Warnings:</strong>
+            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#d1d5db' }}>
+              {credibilityScore.warnings && credibilityScore.warnings.map((warning, index) => (
+                <li key={`warning-${index}`} style={{ margin: '2px 0', color: '#d1d5db' }}>{warning}</li>
+              ))}
+              {credibilityScore.warning_flags && credibilityScore.warning_flags.map((warning, index) => (
+                <li key={`flag-${index}`} style={{ margin: '2px 0', color: '#d1d5db' }}>{warning}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {/* Display recommendations if available */}
+        {credibilityScore.recommendations && credibilityScore.recommendations.length > 0 && (
+          <div style={{ marginTop: '8px', color: '#d1d5db' }}>
+            <strong>Recommendations:</strong>
+            <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#d1d5db' }}>
+              {credibilityScore.recommendations.map((rec, index) => (
+                <li key={index} style={{ margin: '2px 0', color: '#d1d5db' }}>{rec}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Concise Results View Component
 function ConciseResultsView({ analysis }) {
   if (!analysis) return null;
+  
+  console.log('ConciseResultsView received analysis:', analysis);
+  console.log('Credibility score in ConciseResultsView:', analysis.credibility_score);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -183,6 +274,9 @@ function ConciseResultsView({ analysis }) {
           <p style={{ fontSize: '14px', margin: '0', lineHeight: '1.4', color: '#d1d5db' }}>{analysis.ayurvedic_notes}</p>
         </div>
       )}
+      
+      {/* Credibility Score */}
+      <CredibilityScoreSection credibilityScore={analysis.credibility_score} />
     </div>
   );
 }
@@ -191,312 +285,289 @@ export default function GeminiAnalyzer({file, setFile, details, setDetails}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analysisResults, setAnalysisResults] = useState(null);
+  const [detailedResults, setDetailedResults] = useState(null);
   const [error, setError] = useState(null);
   const [showConciseView, setShowConciseView] = useState(true);
 
   // Transform detailed Gemini response to concise format
   const transformToConciseFormat = (detailedResponse) => {
-    if (!detailedResponse) return null;
+    try {
+      if (!detailedResponse || !detailedResponse.analysis) {
+        return null;
+      }
 
-    const concise = {
-      plant: {
-        name: detailedResponse.plant_identification?.common_name || 'Unknown',
-        scientific: detailedResponse.plant_identification?.scientific_name || 'N/A',
-        confidence: detailedResponse.plant_identification?.confidence || 'Unknown'
-      },
-      health: {
-        status: detailedResponse.health_status?.overall_health || 'Unknown',
-        score: `${detailedResponse.health_status?.health_score || '0'}/10`,
-        issues: detailedResponse.health_status?.visible_symptoms?.length > 0 
-          ? detailedResponse.health_status.visible_symptoms.join(', ') 
-          : 'None detected'
-      },
-      quality: {
-        rating: `${detailedResponse.quality_assessment?.quality_rating || '0'}/10`,
-        market_ready: detailedResponse.quality_assessment?.harvest_readiness || 'Unknown',
-        summary: detailedResponse.quality_assessment?.marketability || 'No assessment available'
-      },
-      diseases: {
-        found: detailedResponse.disease_detection?.diseases_found?.length > 0 
-          ? detailedResponse.disease_detection.diseases_found 
-          : ['None detected'],
-        severity: detailedResponse.disease_detection?.severity || 'None',
-        pests: detailedResponse.disease_detection?.pest_issues?.length > 0 
-          ? detailedResponse.disease_detection.pest_issues 
-          : ['None detected']
-      },
-      recommendations: {
-        immediate: detailedResponse.recommendations?.immediate_actions?.slice(0, 3) || ['No immediate actions needed'],
-        care: detailedResponse.recommendations?.best_practices?.slice(0, 2) || ['Standard care practices'],
-        harvest: detailedResponse.recommendations?.harvest_timing || 'Follow standard guidelines'
-      },
-      ayurvedic_notes: detailedResponse.additional_notes || 'No additional notes available'
-    };
+      const { analysis } = detailedResponse;
 
-    return concise;
-  };
+      // Format credibility score with robust defensive checks
+      let formattedCredibilityScore = null;
+      if (detailedResponse.credibility_score) {
+        console.log('Processing credibility score:', detailedResponse.credibility_score);
+        
+        // Get overall_score with fallback
+        const overallScore = typeof detailedResponse.credibility_score.overall_score === 'number' 
+          ? detailedResponse.credibility_score.overall_score 
+          : 0;
+          
+        // Format risk level with proper capitalization
+        const riskLevel = detailedResponse.credibility_score.risk_level 
+          ? (detailedResponse.credibility_score.risk_level.charAt(0) + 
+             detailedResponse.credibility_score.risk_level.slice(1).toLowerCase()) 
+          : 'Unknown';
+          
+        // Get warnings with fallback
+        const warnings = Array.isArray(detailedResponse.credibility_score.warning_flags) 
+          ? detailedResponse.credibility_score.warning_flags 
+          : [];
+        
+        // Get recommendations with fallback
+        const recommendations = Array.isArray(detailedResponse.credibility_score.recommendations) 
+          ? detailedResponse.credibility_score.recommendations 
+          : [];
+        
+        formattedCredibilityScore = {
+          score: Math.round(overallScore / 10), // Convert from 0-100 to 0-10 scale
+          overall_score: overallScore, // Keep original score for reference
+          risk_level: riskLevel,
+          warnings: warnings,
+          warning_flags: warnings, // Add warning_flags for compatibility
+          recommendations: recommendations
+        };
+        
+        console.log('Formatted credibility score:', formattedCredibilityScore);
+      }
 
-  const handleImageSelect = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedImage(file);
-      setError(null);
-      setAnalysisResult(null);
-      
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target.result);
-      reader.readAsDataURL(file);
+      // Format plant identification
+      const plantIdentification = analysis.plant_identification || {};
+      const formattedPlant = {
+        name: plantIdentification.common_name || 'Unknown',
+        scientific: plantIdentification.scientific_name || 'Unknown',
+        confidence: plantIdentification.confidence || 'Low'
+      };
+
+      // Format health status
+      const healthStatus = analysis.health_status || {};
+      const formattedHealth = {
+        status: healthStatus.overall_health || 'Unknown',
+        score: healthStatus.health_score || '0',
+        issues: Array.isArray(healthStatus.visible_symptoms) ? 
+                healthStatus.visible_symptoms.join(', ') : 
+                (healthStatus.visible_symptoms || 'None detected')
+      };
+
+      // Format quality assessment
+      const qualityAssessment = analysis.quality_assessment || {};
+      const formattedQuality = {
+        rating: qualityAssessment.quality_rating || '0',
+        market_ready: qualityAssessment.harvest_readiness || 'No',
+        summary: qualityAssessment.marketability || 'No information available'
+      };
+
+      // Format disease detection
+      const diseaseDetection = analysis.disease_detection || {};
+      const formattedDiseases = {
+        found: diseaseDetection.diseases_found || 'None detected',
+        severity: diseaseDetection.severity || 'None',
+        pests: diseaseDetection.pest_issues || 'None detected'
+      };
+
+      // Format recommendations
+      const recommendations = analysis.recommendations || {};
+      const formattedRecommendations = {
+        immediate: recommendations.immediate_actions || 'No immediate actions needed',
+        care: recommendations.care_tips || 'No specific care tips available',
+        harvest: recommendations.harvest_timing || 'Not specified'
+      };
+
+      // Create the final result object
+      const result = {
+        plant: formattedPlant,
+        health: formattedHealth,
+        quality: formattedQuality,
+        diseases: formattedDiseases,
+        recommendations: formattedRecommendations,
+        ayurvedic_notes: analysis.ayurvedic_notes || 'No additional notes available',
+        credibility_score: formattedCredibilityScore
+      };
+
+      return result;
+    } catch (error) {
+      console.error('Error transforming response:', error);
+      return null;
     }
   };
 
+  // Handle image analysis
   const analyzeImage = async () => {
     if (!selectedImage) {
       setError('Please select an image first');
       return;
     }
 
-    setIsAnalyzing(true);
-    setError(null);
-
     try {
-      // Create FormData to send image to backend API
+      setIsAnalyzing(true);
+      setError(null);
+      setAnalysisResults(null);
+      setDetailedResults(null);
+
+      // Create form data with image and timestamp
       const formData = new FormData();
       formData.append('image', selectedImage);
+      formData.append('timestamp', new Date().toISOString());
 
-      // Call our secure backend API
+      // Get geolocation if available
+      let locationData = { latitude: 28.6139, longitude: 77.2090 }; // Default to Delhi
+      
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          });
+        });
+        
+        locationData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+        console.log('Got location:', locationData);
+      } catch (geoError) {
+        console.warn('Geolocation error:', geoError);
+        console.log('Using default location:', locationData);
+      }
+      
+      // Add location data to form
+      formData.append('latitude', locationData.latitude);
+      formData.append('longitude', locationData.longitude);
+
+      // Send request to API
       const response = await fetch('/api/analyze-plant', {
         method: 'POST',
         body: formData,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || result.details || 'Analysis failed');
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
       }
 
-      setAnalysisResult(result.analysis);
-      setDetails(JSON.stringify(result.analysis));
-    } catch (err) {
-      console.error('Analysis error:', err);
-      setError(`Analysis failed: ${err.message}`);
+      const data = await response.json();
+      console.log('API Response:', data);
+      
+      // Transform data to concise format
+      const conciseData = transformToConciseFormat(data);
+      console.log('Transformed data:', conciseData);
+      
+      // Update states
+      setDetailedResults(data);
+      setAnalysisResults(conciseData);
+      setDetails(data); // Update parent state if needed
+    } catch (error) {
+      console.error('Analysis error:', error);
+      setError(`Analysis failed: ${error.message}`);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  return (
-    <div style={{
-      maxWidth: '800px',
-      // margin: '20px auto',
-      // padding: '20px',
-      // border: '1px solid #374151',
-      borderRadius: '12px',
-      // boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
-      // backgroundColor: '#111827'
-    }}>
-      <h2 style={{
-        fontSize: '24px',
-        fontWeight: 'bold',
-        marginBottom: '20px',
-        color: '#d1d5db',
-        textAlign: 'center'
-      }}>
-        {/* 🌿 Predict the crop health */}
-      </h2>
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setFile(file); // Update parent state if needed
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-      {/* File Input */}
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{
-          display: 'block',
-          fontSize: '14px',
-          fontWeight: '500',
-          marginBottom: '8px',
-          color: '#d1d5db'
-        }}>
-          Select Plant Image of Plant
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageSelect}
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '2px dashed #4b5563',
-            borderRadius: '8px',
-            backgroundColor: '#1f2937',
-            cursor: 'pointer'
-          }}
-        />
+  return (
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <div className="mb-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">Plant Analysis</h2>
+        
+        {/* File input section */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Upload Plant Image
+          </label>
+          <div className="flex items-center space-x-4">
+            <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200">
+              <span>Select Image</span>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleFileChange} 
+                className="hidden" 
+              />
+            </label>
+            <button
+              onClick={analyzeImage}
+              disabled={!selectedImage || isAnalyzing}
+              className={`py-2 px-4 rounded-md transition duration-200 ${!selectedImage || isAnalyzing ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+            >
+              {isAnalyzing ? 'Analyzing...' : 'Analyze Plant'}
+            </button>
+          </div>
+        </div>
+        
+        {/* Image preview */}
+        {imagePreview && (
+          <div className="mt-4 flex justify-center">
+            <div className="relative w-64 h-64 border-2 border-gray-600 rounded-lg overflow-hidden">
+              <Image 
+                src={imagePreview} 
+                alt="Selected plant" 
+                fill
+                style={{ objectFit: 'cover' }} 
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Image Preview */}
-      {imagePreview && (
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <div style={{
-            position: 'relative',
-            width: '300px',
-            height: '300px',
-            margin: '0 auto',
-            border: '1px solid #374151',
-            borderRadius: '8px',
-            overflow: 'hidden'
-          }}>
-            <Image
-              src={imagePreview}
-              alt="Selected plant"
-              fill
-              style={{
-                objectFit: 'contain'
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Analyze Button */}
-      <button
-        onClick={analyzeImage}
-        disabled={!selectedImage || isAnalyzing}
-        style={{
-          width: '100%',
-          padding: '12px 24px',
-          backgroundColor: isAnalyzing ? '#374151' : '#15803d',
-          color: '#d1d5db',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '16px',
-          fontWeight: '600',
-          cursor: isAnalyzing ? 'not-allowed' : 'pointer',
-          marginBottom: '20px',
-          transition: 'background-color 0.2s'
-        }}
-      >
-        {isAnalyzing ? '🔄 Analyzing Plant...' : 'Run The Herb Health Check'}
-      </button>
-
-      {/* Loading State */}
-      {isAnalyzing && (
-        <div style={{
-          textAlign: 'center',
-          padding: '20px',
-          backgroundColor: '#083344',
-          borderRadius: '8px',
-          marginBottom: '20px'
-        }}>
-          <div style={{ fontSize: '18px', color: '#7dd3fc' }}>
-            Analyzing the Data Set plase wait...
-          </div>
-          <div style={{ fontSize: '14px', color: '#d1d5db', marginTop: '8px' }}>
-            This may take a few moments
-          </div>
-        </div>
-      )}
-
-      {/* Error Display */}
+      {/* Error message */}
       {error && (
-        <div style={{
-          padding: '15px',
-          backgroundColor: '#450a0a',
-          border: '1px solid #b91c1c',
-          borderRadius: '8px',
-          color: '#f87171',
-          marginBottom: '20px'
-        }}>
-          <strong>Error:</strong> {error}
+        <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg">
+          <p className="text-red-300">{error}</p>
         </div>
       )}
 
-      {/* Results Display */}
-      {analysisResult && (
-        <div style={{
-          backgroundColor: '#052e16',
-          border: '1px solid #15803d',
-          borderRadius: '12px',
-          padding: '20px',
-          marginTop: '20px'
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '15px'
-          }}>
-            <h3 style={{
-              fontSize: '20px',
-              fontWeight: 'bold',
-              color: '#4ade80',
-              margin: '0',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              📊 Analysis Results
-            </h3>
-            
-            {/* View Toggle */}
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
+      {/* Analysis results */}
+      {analysisResults && (
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-blue-300">Analysis Results</h2>
+            <div className="flex space-x-2">
+              <button 
                 onClick={() => setShowConciseView(true)}
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  backgroundColor: showConciseView ? '#15803d' : '#374151',
-                  color: '#d1d5db'
-                }}
+                className={`px-3 py-1 text-sm rounded-md ${showConciseView ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
               >
-                📋 Summary
+                Summary View
               </button>
-              <button
+              <button 
                 onClick={() => setShowConciseView(false)}
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  backgroundColor: !showConciseView ? '#15803d' : '#374151',
-                  color: '#d1d5db'
-                }}
+                className={`px-3 py-1 text-sm rounded-md ${!showConciseView ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
               >
-                🔍 Detailed JSON
+                JSON View
               </button>
             </div>
           </div>
 
           {showConciseView ? (
-            /* Concise View */
-            <ConciseResultsView analysis={transformToConciseFormat(analysisResult)} />
+            <ConciseResultsView analysis={analysisResults} />
           ) : (
-            /* Detailed JSON View */
-            <div style={{
-              // backgroundColor: '#111827',
-              // borderRadius: '8px',
-              padding: '15px',
-              // border: '1px solid #374151',
-              fontFamily: 'monospace'
-            }}>
-              <pre style={{
-                whiteSpace: 'pre-wrap',
-                wordWrap: 'break-word',
-                margin: '0',
-                fontSize: '12px',
-                lineHeight: '1.5',
-                color: '#d1d5db'
-              }}>
-                {JSON.stringify(analysisResult, null, 2)}
+            <div className="bg-gray-900 p-4 rounded-lg overflow-auto max-h-[600px]">
+              <pre className="text-gray-300 text-sm">
+                {JSON.stringify(detailedResults, null, 2)}
               </pre>
             </div>
           )}
-
         </div>
       )}
     </div>
